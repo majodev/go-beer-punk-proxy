@@ -1,0 +1,221 @@
+swagger: "2.0"
+info:
+  title: github.com/majodev/beer-punk-api
+  version: 0.1.0
+paths: {}
+definitions:
+  GetBeersResponse:
+    type: array
+    items:
+      $ref: "#/definitions/Beer"
+  Beer:
+    type: object
+    additionalProperties: false
+    properties:
+      id:
+        type: integer
+      name:
+        type: string
+      tagline:
+        type: string
+      first_brewed:
+        type: string
+      description:
+        type: string
+      image_url:
+        type: string
+        format: uri
+      abv:
+        type: number
+      ibu:
+        additionalProperties: {}
+        # anyOf:
+        #   - type: number
+        #   - type: "null"
+      target_fg:
+        type: integer
+      target_og:
+        type: number
+      ebc:
+        additionalProperties: {}
+        # anyOf:
+        #   - type: integer
+        #   - type: "null"
+      srm:
+        additionalProperties: {}
+        # anyOf:
+        #   - type: number
+        #   - type: "null"
+      ph:
+        additionalProperties: {}
+        # anyOf:
+        #   - type: number
+        #   - type: "null"
+      attenuation_level:
+        type: number
+      volume:
+        $ref: "#/definitions/BoilVolume"
+      boil_volume:
+        $ref: "#/definitions/BoilVolume"
+      method:
+        $ref: "#/definitions/Method"
+      ingredients:
+        $ref: "#/definitions/Ingredients"
+      food_pairing:
+        type: array
+        items:
+          type: string
+      brewers_tips:
+        type: string
+      contributed_by:
+        $ref: "#/definitions/ContributedBy"
+    required:
+      - abv
+      - attenuation_level
+      - boil_volume
+      - brewers_tips
+      - contributed_by
+      - description
+      - ebc
+      - first_brewed
+      - food_pairing
+      - ibu
+      - id
+      - image_url
+      - ingredients
+      - method
+      - name
+      - ph
+      - srm
+      - tagline
+      - target_fg
+      - target_og
+      - volume
+    title: Beer
+  BoilVolume:
+    type: object
+    additionalProperties: false
+    properties:
+      value:
+        type: number
+      unit:
+        $ref: "#/definitions/Unit"
+    required:
+      - unit
+      - value
+    title: BoilVolume
+  Ingredients:
+    type: object
+    additionalProperties: false
+    properties:
+      malt:
+        type: array
+        items:
+          $ref: "#/definitions/Malt"
+      hops:
+        type: array
+        items:
+          $ref: "#/definitions/Hop"
+      yeast:
+        type: string
+    required:
+      - hops
+      - malt
+      - yeast
+    title: Ingredients
+  Hop:
+    type: object
+    additionalProperties: false
+    properties:
+      name:
+        type: string
+      amount:
+        $ref: "#/definitions/BoilVolume"
+      add:
+        $ref: "#/definitions/Add"
+      attribute:
+        $ref: "#/definitions/Attribute"
+    required:
+      - add
+      - amount
+      - attribute
+      - name
+    title: Hop
+  Malt:
+    type: object
+    additionalProperties: false
+    properties:
+      name:
+        type: string
+      amount:
+        $ref: "#/definitions/BoilVolume"
+    required:
+      - amount
+      - name
+    title: Malt
+  Method:
+    type: object
+    additionalProperties: false
+    properties:
+      mash_temp:
+        type: array
+        items:
+          $ref: "#/definitions/MashTemp"
+      fermentation:
+        $ref: "#/definitions/Fermentation"
+      twist:
+        additionalProperties: {}
+        # anyOf:
+        #   - type: "null"
+        #   - type: string
+    required:
+      - fermentation
+      - mash_temp
+      - twist
+    title: Method
+  Fermentation:
+    type: object
+    additionalProperties: false
+    properties:
+      temp:
+        $ref: "#/definitions/BoilVolume"
+    required:
+      - temp
+    title: Fermentation
+  MashTemp:
+    type: object
+    additionalProperties: false
+    properties:
+      temp:
+        $ref: "#/definitions/BoilVolume"
+      duration:
+        additionalProperties: {}
+        # anyOf:
+        #   - type: integer
+        #   - type: "null"
+    required:
+      - duration
+      - temp
+    title: MashTemp
+  Unit:
+    type: string
+    enum:
+      - litres
+      - grams
+      - kilograms
+      - celsius
+    title: Unit
+  ContributedBy:
+    type: string
+    title: ContributedBy
+  Add:
+    type: string
+    enum:
+      - start
+      - middle
+      - end
+      - dry hop
+    title: Add
+  Attribute:
+    type: string
+    title: Attribute

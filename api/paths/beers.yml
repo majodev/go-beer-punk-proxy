@@ -1,0 +1,21 @@
+swagger: "2.0"
+info:
+  title: github.com/majodev/beer-punk-api
+  version: 0.1.0
+paths:
+  # https://punkapi.com/documentation/v2
+  /v2/beers:
+    get:
+      security:
+        - Bearer: []
+      summary: Get beers
+      operationId: GetBeersRoute
+      description: |-
+        Mirror of https://punkapi.com/documentation/v2
+      tags:
+        - beers
+      responses:
+        "200":
+          description: GetBeersResponse
+          schema:
+            $ref: ../definitions/beers.yml#/definitions/GetBeersResponse

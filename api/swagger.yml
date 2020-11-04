@@ -320,7 +320,132 @@ paths:
       responses:
         "200":
           description: OK
+  /v2/beers:
+    get:
+      security:
+      - Bearer: []
+      description: Mirror of https://punkapi.com/documentation/v2
+      tags:
+      - beers
+      summary: Get beers
+      operationId: GetBeersRoute
+      responses:
+        "200":
+          description: GetBeersResponse
+          schema:
+            $ref: '#/definitions/getBeersResponse'
 definitions:
+  add:
+    type: string
+    title: Add
+    enum:
+    - start
+    - middle
+    - end
+    - dry hop
+  attribute:
+    type: string
+    title: Attribute
+  beer:
+    type: object
+    title: Beer
+    required:
+    - abv
+    - attenuation_level
+    - boil_volume
+    - brewers_tips
+    - contributed_by
+    - description
+    - ebc
+    - first_brewed
+    - food_pairing
+    - ibu
+    - id
+    - image_url
+    - ingredients
+    - method
+    - name
+    - ph
+    - srm
+    - tagline
+    - target_fg
+    - target_og
+    - volume
+    properties:
+      abv:
+        type: number
+      attenuation_level:
+        type: number
+      boil_volume:
+        $ref: '#/definitions/boilVolume'
+      brewers_tips:
+        type: string
+      contributed_by:
+        $ref: '#/definitions/contributedBy'
+      description:
+        type: string
+      ebc:
+        additionalProperties: false
+      first_brewed:
+        type: string
+      food_pairing:
+        type: array
+        items:
+          type: string
+      ibu:
+        additionalProperties: false
+      id:
+        type: integer
+      image_url:
+        type: string
+        format: uri
+      ingredients:
+        $ref: '#/definitions/ingredients'
+      method:
+        $ref: '#/definitions/method'
+      name:
+        type: string
+      ph:
+        additionalProperties: false
+      srm:
+        additionalProperties: false
+      tagline:
+        type: string
+      target_fg:
+        type: integer
+      target_og:
+        type: number
+      volume:
+        $ref: '#/definitions/boilVolume'
+    additionalProperties: false
+  boilVolume:
+    type: object
+    title: BoilVolume
+    required:
+    - unit
+    - value
+    properties:
+      unit:
+        $ref: '#/definitions/unit'
+      value:
+        type: number
+    additionalProperties: false
+  contributedBy:
+    type: string
+    title: ContributedBy
+  fermentation:
+    type: object
+    title: Fermentation
+    required:
+    - temp
+    properties:
+      temp:
+        $ref: '#/definitions/boilVolume'
+    additionalProperties: false
+  getBeersResponse:
+    type: array
+    items:
+      $ref: '#/definitions/beer'
   getUserInfoResponse:
     type: object
     required:
@@ -351,6 +476,24 @@ definitions:
         description: Unix timestamp the user's info was last updated at
         type: integer
         example: 1591960808
+  hop:
+    type: object
+    title: Hop
+    required:
+    - add
+    - amount
+    - attribute
+    - name
+    properties:
+      add:
+        $ref: '#/definitions/add'
+      amount:
+        $ref: '#/definitions/boilVolume'
+      attribute:
+        $ref: '#/definitions/attribute'
+      name:
+        type: string
+    additionalProperties: false
   httpValidationErrorDetail:
     type: object
     required:
@@ -367,6 +510,66 @@ definitions:
       key:
         description: Key of field failing validation
         type: string
+  ingredients:
+    type: object
+    title: Ingredients
+    required:
+    - hops
+    - malt
+    - yeast
+    properties:
+      hops:
+        type: array
+        items:
+          $ref: '#/definitions/hop'
+      malt:
+        type: array
+        items:
+          $ref: '#/definitions/malt'
+      yeast:
+        type: string
+    additionalProperties: false
+  malt:
+    type: object
+    title: Malt
+    required:
+    - amount
+    - name
+    properties:
+      amount:
+        $ref: '#/definitions/boilVolume'
+      name:
+        type: string
+    additionalProperties: false
+  mashTemp:
+    type: object
+    title: MashTemp
+    required:
+    - duration
+    - temp
+    properties:
+      duration:
+        additionalProperties: false
+      temp:
+        $ref: '#/definitions/boilVolume'
+    additionalProperties: false
+  method:
+    type: object
+    title: Method
+    required:
+    - fermentation
+    - mash_temp
+    - twist
+    properties:
+      fermentation:
+        $ref: '#/definitions/fermentation'
+      mash_temp:
+        type: array
+        items:
+          $ref: '#/definitions/mashTemp'
+      twist:
+        additionalProperties: false
+    additionalProperties: false
   orderDir:
     type: string
     enum:
@@ -563,6 +766,14 @@ definitions:
         type: array
         items:
           $ref: '#/definitions/httpValidationErrorDetail'
+  unit:
+    type: string
+    title: Unit
+    enum:
+    - litres
+    - grams
+    - kilograms
+    - celsius
 responses:
   AuthForbiddenResponse:
     description: PublicHTTPError, type `USER_DEACTIVATED`/`NOT_LOCAL_USER`
