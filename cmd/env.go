@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 
-	"allaboutapps.dev/aw/go-starter/internal/config"
+	"github.com/majodev/go-beer-punk-proxy/internal/config"
 	"github.com/rs/zerolog/log"
 	"github.com/spf13/cobra"
 )

@@ -9,9 +9,9 @@ import (
 	"syscall"
 	"time"
 
-	"allaboutapps.dev/aw/go-starter/internal/api"
-	"allaboutapps.dev/aw/go-starter/internal/api/router"
-	"allaboutapps.dev/aw/go-starter/internal/config"
+	"github.com/majodev/go-beer-punk-proxy/internal/api"
+	"github.com/majodev/go-beer-punk-proxy/internal/api/router"
+	"github.com/majodev/go-beer-punk-proxy/internal/config"
 	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"
 	"github.com/spf13/cobra"

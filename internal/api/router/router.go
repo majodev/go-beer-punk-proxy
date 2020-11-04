@@ -5,11 +5,11 @@ import (
 	"runtime"
 	"strings"
 
-	"allaboutapps.dev/aw/go-starter/internal/api"
-	"allaboutapps.dev/aw/go-starter/internal/api/handlers"
-	"allaboutapps.dev/aw/go-starter/internal/api/middleware"
 	"github.com/labstack/echo/v4"
 	echoMiddleware "github.com/labstack/echo/v4/middleware"
+	"github.com/majodev/go-beer-punk-proxy/internal/api"
+	"github.com/majodev/go-beer-punk-proxy/internal/api/handlers"
+	"github.com/majodev/go-beer-punk-proxy/internal/api/middleware"
 	"github.com/rs/zerolog/log"
 
 	// #nosec G108 - pprof handlers (conditionally made available via http.DefaultServeMux)

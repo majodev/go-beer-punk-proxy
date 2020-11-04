@@ -13,7 +13,7 @@ import (
 	"github.com/go-openapi/runtime/middleware"
 	"github.com/go-openapi/strfmt"
 
-	"allaboutapps.dev/aw/go-starter/internal/types"
+	"github.com/majodev/go-beer-punk-proxy/internal/types"
 )
 
 // NewPostForgotPasswordRouteParams creates a new PostForgotPasswordRouteParams object

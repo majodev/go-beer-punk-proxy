@@ -1,6 +1,6 @@
 swagger: "2.0"
 info:
-  title: allaboutapps.dev/aw/go-starter
+  title: github.com/majodev/go-beer-punk-proxy
   version: 0.1.0
 paths:
   /swagger.yml:

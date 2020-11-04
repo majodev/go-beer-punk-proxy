@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"testing"
 
-	"allaboutapps.dev/aw/go-starter/internal/config"
+	"github.com/majodev/go-beer-punk-proxy/internal/config"
 )
 
 func TestPrintServiceEnv(t *testing.T) {

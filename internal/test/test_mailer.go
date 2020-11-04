@@ -3,9 +3,9 @@ package test
 import (
 	"testing"
 
-	"allaboutapps.dev/aw/go-starter/internal/config"
-	"allaboutapps.dev/aw/go-starter/internal/mailer"
-	"allaboutapps.dev/aw/go-starter/internal/mailer/transport"
+	"github.com/majodev/go-beer-punk-proxy/internal/config"
+	"github.com/majodev/go-beer-punk-proxy/internal/mailer"
+	"github.com/majodev/go-beer-punk-proxy/internal/mailer/transport"
 )
 
 const (

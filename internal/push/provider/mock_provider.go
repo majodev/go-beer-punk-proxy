@@ -3,7 +3,7 @@ package provider
 import (
 	"errors"
 
-	"allaboutapps.dev/aw/go-starter/internal/push"
+	"github.com/majodev/go-beer-punk-proxy/internal/push"
 	"github.com/rs/zerolog/log"
 )
 

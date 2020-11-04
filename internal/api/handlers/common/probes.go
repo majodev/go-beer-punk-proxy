@@ -9,7 +9,7 @@ import (
 	"sync"
 	"time"
 
-	"allaboutapps.dev/aw/go-starter/internal/util"
+	"github.com/majodev/go-beer-punk-proxy/internal/util"
 	"golang.org/x/sys/unix"
 )
 

@@ -9,14 +9,14 @@ import (
 	"mime/multipart"
 	"net/http"
 
-	"allaboutapps.dev/aw/go-starter/internal/api/httperrors"
-	"allaboutapps.dev/aw/go-starter/internal/types"
 	"github.com/gabriel-vasile/mimetype"
 	"github.com/go-openapi/errors"
 	"github.com/go-openapi/runtime"
 	"github.com/go-openapi/strfmt"
 	"github.com/go-openapi/swag"
 	"github.com/labstack/echo/v4"
+	"github.com/majodev/go-beer-punk-proxy/internal/api/httperrors"
+	"github.com/majodev/go-beer-punk-proxy/internal/types"
 )
 
 // BindAndValidate binds the request, parsing its body (depending on the `Content-Type` request header) and performs payload

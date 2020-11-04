@@ -11,9 +11,9 @@ import (
 	"strings"
 	"time"
 
-	"allaboutapps.dev/aw/go-starter/internal/util"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
+	"github.com/majodev/go-beer-punk-proxy/internal/util"
 	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"
 )

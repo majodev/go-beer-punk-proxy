@@ -7,9 +7,9 @@ import (
 	"sync"
 	"testing"
 
-	pUtil "allaboutapps.dev/aw/go-starter/internal/util"
 	"github.com/allaboutapps/integresql-client-go"
 	"github.com/allaboutapps/integresql-client-go/pkg/util"
+	pUtil "github.com/majodev/go-beer-punk-proxy/internal/util"
 	migrate "github.com/rubenv/sql-migrate"
 	"github.com/volatiletech/sqlboiler/v4/boil"
 )

@@ -5,8 +5,8 @@ import (
 	"database/sql"
 	"errors"
 
-	"allaboutapps.dev/aw/go-starter/internal/models"
-	"allaboutapps.dev/aw/go-starter/internal/util"
+	"github.com/majodev/go-beer-punk-proxy/internal/models"
+	"github.com/majodev/go-beer-punk-proxy/internal/util"
 )
 
 type ProviderType string

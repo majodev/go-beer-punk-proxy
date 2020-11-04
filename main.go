@@ -1,6 +1,6 @@
 package main
 
-import "allaboutapps.dev/aw/go-starter/cmd"
+import "github.com/majodev/go-beer-punk-proxy/cmd"
 
 func main() {
 	cmd.Execute()

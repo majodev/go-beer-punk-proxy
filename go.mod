@@ -1,4 +1,4 @@
-module allaboutapps.dev/aw/go-starter
+module github.com/majodev/go-beer-punk-proxy
 
 go 1.15
 

@@ -6,9 +6,9 @@ import (
 	"sync"
 	"time"
 
-	"allaboutapps.dev/aw/go-starter/internal/mailer/transport"
-	"allaboutapps.dev/aw/go-starter/internal/push/provider"
-	"allaboutapps.dev/aw/go-starter/internal/util"
+	"github.com/majodev/go-beer-punk-proxy/internal/mailer/transport"
+	"github.com/majodev/go-beer-punk-proxy/internal/push/provider"
+	"github.com/majodev/go-beer-punk-proxy/internal/util"
 	"github.com/rs/zerolog"
 )
 

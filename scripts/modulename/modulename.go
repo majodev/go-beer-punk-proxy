@@ -8,7 +8,7 @@ import (
 	"fmt"
 	"log"
 
-	"allaboutapps.dev/aw/go-starter/scripts"
+	"github.com/majodev/go-beer-punk-proxy/scripts"
 )
 
 // https://blog.carlmjohnson.net/post/2016-11-27-how-to-use-go-generate/

@@ -3,7 +3,7 @@ package test_test
 import (
 	"testing"
 
-	"allaboutapps.dev/aw/go-starter/internal/test"
+	"github.com/majodev/go-beer-punk-proxy/internal/test"
 	"github.com/stretchr/testify/assert"
 )
 

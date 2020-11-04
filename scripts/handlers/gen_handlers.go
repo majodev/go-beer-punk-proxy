@@ -21,7 +21,7 @@ import (
 	"strings"
 	"text/template"
 
-	"allaboutapps.dev/aw/go-starter/scripts"
+	"github.com/majodev/go-beer-punk-proxy/scripts"
 )
 
 // https://blog.carlmjohnson.net/post/2016-11-27-how-to-use-go-generate/
@@ -45,7 +45,7 @@ var (
 package handlers
 
 import (
-	"allaboutapps.dev/aw/go-starter/internal/api"
+	"github.com/majodev/go-beer-punk-proxy/internal/api"
 	{{- range .SubPkgs }}
 	"{{ . }}"
 	{{- end }}

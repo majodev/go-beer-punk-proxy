@@ -4,7 +4,7 @@ import (
 	"context"
 	"time"
 
-	"allaboutapps.dev/aw/go-starter/internal/models"
+	"github.com/majodev/go-beer-punk-proxy/internal/models"
 	"github.com/volatiletech/null/v8"
 	"github.com/volatiletech/sqlboiler/v4/boil"
 )

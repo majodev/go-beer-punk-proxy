@@ -4,7 +4,7 @@ import (
 	"regexp"
 	"testing"
 
-	"allaboutapps.dev/aw/go-starter/internal/util/hashing"
+	"github.com/majodev/go-beer-punk-proxy/internal/util/hashing"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )

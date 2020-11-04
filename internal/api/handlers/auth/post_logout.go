@@ -4,13 +4,13 @@ import (
 	"database/sql"
 	"net/http"
 
-	"allaboutapps.dev/aw/go-starter/internal/api"
-	"allaboutapps.dev/aw/go-starter/internal/api/auth"
-	"allaboutapps.dev/aw/go-starter/internal/models"
-	"allaboutapps.dev/aw/go-starter/internal/types"
-	"allaboutapps.dev/aw/go-starter/internal/util"
-	"allaboutapps.dev/aw/go-starter/internal/util/db"
 	"github.com/labstack/echo/v4"
+	"github.com/majodev/go-beer-punk-proxy/internal/api"
+	"github.com/majodev/go-beer-punk-proxy/internal/api/auth"
+	"github.com/majodev/go-beer-punk-proxy/internal/models"
+	"github.com/majodev/go-beer-punk-proxy/internal/types"
+	"github.com/majodev/go-beer-punk-proxy/internal/util"
+	"github.com/majodev/go-beer-punk-proxy/internal/util/db"
 	"github.com/volatiletech/sqlboiler/v4/boil"
 )
 

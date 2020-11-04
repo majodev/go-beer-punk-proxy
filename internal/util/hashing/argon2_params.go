@@ -1,6 +1,6 @@
 package hashing
 
-import "allaboutapps.dev/aw/go-starter/internal/util"
+import "github.com/majodev/go-beer-punk-proxy/internal/util"
 
 var (
 	// DefaultArgon2Params represents Argon2ID parameter recommendations in accordance with:

@@ -15,10 +15,10 @@ import (
 	"strings"
 	"sync"
 
-	"allaboutapps.dev/aw/go-starter/internal/api"
-	"allaboutapps.dev/aw/go-starter/internal/api/router"
-	"allaboutapps.dev/aw/go-starter/internal/config"
-	"allaboutapps.dev/aw/go-starter/internal/types"
+	"github.com/majodev/go-beer-punk-proxy/internal/api"
+	"github.com/majodev/go-beer-punk-proxy/internal/api/router"
+	"github.com/majodev/go-beer-punk-proxy/internal/config"
+	"github.com/majodev/go-beer-punk-proxy/internal/types"
 	"github.com/rs/zerolog"
 )
 

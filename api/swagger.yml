@@ -6,7 +6,7 @@ produces:
 swagger: "2.0"
 info:
   description: API documentation
-  title: allaboutapps.dev/aw/go-starter
+  title: github.com/majodev/go-beer-punk-proxy
   version: 0.1.0
 paths:
   /-/healthy:

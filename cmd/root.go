@@ -10,7 +10,7 @@ import (
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
 	Use:   "app",
-	Short: "allaboutapps.dev/aw/go-starter",
+	Short: "github.com/majodev/go-beer-punk-proxy",
 	Long: `A stateless RESTful JSON service written in Go.
 Built on the shoulders of giants.
 

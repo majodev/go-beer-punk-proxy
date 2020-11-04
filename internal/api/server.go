@@ -6,12 +6,12 @@ import (
 	"errors"
 	"fmt"
 
-	"allaboutapps.dev/aw/go-starter/internal/config"
-	"allaboutapps.dev/aw/go-starter/internal/mailer"
-	"allaboutapps.dev/aw/go-starter/internal/mailer/transport"
-	"allaboutapps.dev/aw/go-starter/internal/push"
-	"allaboutapps.dev/aw/go-starter/internal/push/provider"
 	"github.com/labstack/echo/v4"
+	"github.com/majodev/go-beer-punk-proxy/internal/config"
+	"github.com/majodev/go-beer-punk-proxy/internal/mailer"
+	"github.com/majodev/go-beer-punk-proxy/internal/mailer/transport"
+	"github.com/majodev/go-beer-punk-proxy/internal/push"
+	"github.com/majodev/go-beer-punk-proxy/internal/push/provider"
 	"github.com/rs/zerolog/log"
 
 	// Import postgres driver for database/sql package

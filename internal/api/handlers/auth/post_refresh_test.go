@@ -6,12 +6,12 @@ import (
 	"net/http"
 	"testing"
 
-	"allaboutapps.dev/aw/go-starter/internal/api"
-	"allaboutapps.dev/aw/go-starter/internal/api/handlers/auth"
-	"allaboutapps.dev/aw/go-starter/internal/api/httperrors"
-	"allaboutapps.dev/aw/go-starter/internal/api/middleware"
-	"allaboutapps.dev/aw/go-starter/internal/test"
-	"allaboutapps.dev/aw/go-starter/internal/types"
+	"github.com/majodev/go-beer-punk-proxy/internal/api"
+	"github.com/majodev/go-beer-punk-proxy/internal/api/handlers/auth"
+	"github.com/majodev/go-beer-punk-proxy/internal/api/httperrors"
+	"github.com/majodev/go-beer-punk-proxy/internal/api/middleware"
+	"github.com/majodev/go-beer-punk-proxy/internal/test"
+	"github.com/majodev/go-beer-punk-proxy/internal/types"
 	"github.com/stretchr/testify/assert"
 )
 
