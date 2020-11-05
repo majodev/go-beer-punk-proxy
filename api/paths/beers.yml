@@ -4,7 +4,7 @@ info:
   version: 0.1.0
 paths:
   # https://punkapi.com/documentation/v2
-  /v2/beers:
+  /api/v1/beers:
     get:
       security:
         - Bearer: []
@@ -14,6 +14,261 @@ paths:
         Mirror of https://punkapi.com/documentation/v2
       tags:
         - beers
+      parameters: &PARAMS
+
+        - minimum: 0
+          type: integer
+          default: 0
+          description: page
+          name: page
+          in: query
+
+        - minimum: 1
+          type: integer
+          default: 25
+          description: per_page
+          name: per_page
+          in: query
+
+        - type: integer
+          required: false
+          description: Returns all beers with ABV greater than the supplied number
+          name: abv_gt
+          in: query
+        - type: integer
+          required: false
+          description: Returns all beers with ABV less than the supplied number
+          name: abv_lt
+          in: query
+
+        - type: integer
+          required: false
+          description: Returns all beers with IBU greater than the supplied number
+          name: ibu_gt
+          in: query
+        - type: integer
+          required: false
+          description: Returns all beers with IBU less than the supplied number
+          name: ibu_lt
+          in: query
+
+        - type: integer
+          required: false
+          description: Returns all beers with EBC greater than the supplied number
+          name: ebc_gt
+          in: query
+        - type: integer
+          required: false
+          description: Returns all beers with EBC less than the supplied number
+          name: ebc_lt
+          in: query
+
+        - type: string
+          required: false
+          x-nullable: true
+          description: Returns all beers matching the supplied name (this will match partial strings as well so e.g punk will return Punk IPA), if you need to add spaces just add an underscore (_).
+          name: beer_name
+          in: query
+
+        - type: string
+          required: false
+          x-nullable: true
+          description: Returns all beers matching the supplied yeast name, this performs a fuzzy match, if you need to add spaces just add an underscore (_).
+          name: yeast
+          in: query
+
+        - type: string
+          required: false
+          x-nullable: true
+          format: date-time
+          description: Returns all beers brewed before this date, the date format is mm-yyyy e.g 10-2011
+          name: brewed_before
+          in: query
+        - type: string
+          required: false
+          x-nullable: true
+          format: date-time
+          description: Returns all beers brewed after this date, the date format is mm-yyyy e.g 10-2011
+          name: brewed_after
+          in: query
+
+        - type: string
+          required: false
+          x-nullable: true
+          description: Returns all beers matching the supplied hops name, this performs a fuzzy match, if you need to add spaces just add an underscore (_).
+          name: hops
+          in: query
+
+        - type: string
+          required: false
+          x-nullable: true
+          description: Returns all beers matching the supplied malt name, this performs a fuzzy match, if you need to add spaces just add an underscore (_).
+          name: malt
+          in: query
+
+        - type: string
+          required: false
+          x-nullable: true
+          description: Returns all beers matching the supplied food string, this performs a fuzzy match, if you need to add spaces just add an underscore (_).
+          name: food
+          in: query
+
+        - type: string
+          required: false
+          x-nullable: true
+          description: Returns all beers matching the supplied ID's. You can pass in multiple ID's by separating them with a | symbol.
+          name: ids
+          in: query
+
+      responses:
+        "200":
+          description: GetBeersResponse
+          schema:
+            $ref: ../definitions/beers.yml#/definitions/GetBeersResponse
+
+  /api/v1/beers/{id}:
+    get:
+      security:
+        - Bearer: []
+      summary: Get a Single Beer
+      operationId: GetBeerRoute
+      description: |-
+        Gets a beer from the api using the beers id.
+        Mirror of https://punkapi.com/documentation/v2
+      tags:
+        - beers
+      parameters:
+
+        - minimum: 0
+          type: integer
+          description: BeerID
+          name: id
+          in: path
+          required: true
+
+        - minimum: 0
+          type: integer
+          default: 0
+          description: page
+          name: page
+          in: query
+
+        - minimum: 1
+          type: integer
+          default: 25
+          description: per_page
+          name: per_page
+          in: query
+
+        - type: integer
+          required: false
+          description: Returns all beers with ABV greater than the supplied number
+          name: abv_gt
+          in: query
+        - type: integer
+          required: false
+          description: Returns all beers with ABV less than the supplied number
+          name: abv_lt
+          in: query
+
+        - type: integer
+          required: false
+          description: Returns all beers with IBU greater than the supplied number
+          name: ibu_gt
+          in: query
+        - type: integer
+          required: false
+          description: Returns all beers with IBU less than the supplied number
+          name: ibu_lt
+          in: query
+
+        - type: integer
+          required: false
+          description: Returns all beers with EBC greater than the supplied number
+          name: ebc_gt
+          in: query
+        - type: integer
+          required: false
+          description: Returns all beers with EBC less than the supplied number
+          name: ebc_lt
+          in: query
+
+        - type: string
+          required: false
+          x-nullable: true
+          description: Returns all beers matching the supplied name (this will match partial strings as well so e.g punk will return Punk IPA), if you need to add spaces just add an underscore (_).
+          name: beer_name
+          in: query
+
+        - type: string
+          required: false
+          x-nullable: true
+          description: Returns all beers matching the supplied yeast name, this performs a fuzzy match, if you need to add spaces just add an underscore (_).
+          name: yeast
+          in: query
+
+        - type: string
+          required: false
+          x-nullable: true
+          format: date-time
+          description: Returns all beers brewed before this date, the date format is mm-yyyy e.g 10-2011
+          name: brewed_before
+          in: query
+        - type: string
+          required: false
+          x-nullable: true
+          format: date-time
+          description: Returns all beers brewed after this date, the date format is mm-yyyy e.g 10-2011
+          name: brewed_after
+          in: query
+
+        - type: string
+          required: false
+          x-nullable: true
+          description: Returns all beers matching the supplied hops name, this performs a fuzzy match, if you need to add spaces just add an underscore (_).
+          name: hops
+          in: query
+
+        - type: string
+          required: false
+          x-nullable: true
+          description: Returns all beers matching the supplied malt name, this performs a fuzzy match, if you need to add spaces just add an underscore (_).
+          name: malt
+          in: query
+
+        - type: string
+          required: false
+          x-nullable: true
+          description: Returns all beers matching the supplied food string, this performs a fuzzy match, if you need to add spaces just add an underscore (_).
+          name: food
+          in: query
+
+        - type: string
+          required: false
+          x-nullable: true
+          description: Returns all beers matching the supplied ID's. You can pass in multiple ID's by separating them with a | symbol.
+          name: ids
+          in: query
+
+      responses:
+        "200":
+          description: GetBeersResponse
+          schema:
+            $ref: ../definitions/beers.yml#/definitions/GetBeersResponse
+
+
+  /api/v1/beers/random:
+    get:
+      security:
+        - Bearer: []
+      summary: Get Random Beer
+      operationId: GetRandomBeerRoute
+      description: |-
+        Gets a random beer from the API, this takes no paramaters.
+        Mirror of https://punkapi.com/documentation/v2
+      tags:
+        - beers
+
       responses:
         "200":
           description: GetBeersResponse

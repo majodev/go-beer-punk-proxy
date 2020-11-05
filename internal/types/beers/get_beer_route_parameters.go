@@ -16,9 +16,9 @@ import (
 	"github.com/go-openapi/validate"
 )
 
-// NewGetBeersRouteParams creates a new GetBeersRouteParams object
+// NewGetBeerRouteParams creates a new GetBeerRouteParams object
 // with the default values initialized.
-func NewGetBeersRouteParams() GetBeersRouteParams {
+func NewGetBeerRouteParams() GetBeerRouteParams {
 
 	var (
 		// initialize parameters with default values
@@ -27,18 +27,18 @@ func NewGetBeersRouteParams() GetBeersRouteParams {
 		perPageDefault = int64(25)
 	)
 
-	return GetBeersRouteParams{
+	return GetBeerRouteParams{
 		Page: &pageDefault,
 
 		PerPage: &perPageDefault,
 	}
 }
 
-// GetBeersRouteParams contains all the bound params for the get beers route operation
+// GetBeerRouteParams contains all the bound params for the get beer route operation
 // typically these are obtained from a http.Request
 //
-// swagger:parameters GetBeersRoute
-type GetBeersRouteParams struct {
+// swagger:parameters GetBeerRoute
+type GetBeerRouteParams struct {
 
 	// HTTP Request Object
 	HTTPRequest *http.Request `json:"-"`
@@ -87,6 +87,12 @@ type GetBeersRouteParams struct {
 	  In: query
 	*/
 	IbuLt *int64 `query:"ibu_lt"`
+	/*BeerID
+	  Required: true
+	  Minimum: 0
+	  In: path
+	*/
+	ID int64
 	/*Returns all beers matching the supplied ID's. You can pass in multiple ID's by separating them with a | symbol.
 	  In: query
 	*/
@@ -116,8 +122,8 @@ type GetBeersRouteParams struct {
 // BindRequest both binds and validates a request, it assumes that complex things implement a Validatable(strfmt.Registry) error interface
 // for simple values it will use straight method calls.
 //
-// To ensure default values, the struct must have been initialized with NewGetBeersRouteParams() beforehand.
-func (o *GetBeersRouteParams) BindRequest(r *http.Request, route *middleware.MatchedRoute) error {
+// To ensure default values, the struct must have been initialized with NewGetBeerRouteParams() beforehand.
+func (o *GetBeerRouteParams) BindRequest(r *http.Request, route *middleware.MatchedRoute) error {
 	var res []error
 
 	o.HTTPRequest = r
@@ -179,6 +185,11 @@ func (o *GetBeersRouteParams) BindRequest(r *http.Request, route *middleware.Mat
 		res = append(res, err)
 	}
 
+	rID, rhkID, _ := route.Params.GetOK("id")
+	if err := o.bindID(rID, rhkID, route.Formats); err != nil {
+		res = append(res, err)
+	}
+
 	qIds, qhkIds, _ := qs.GetOK("ids")
 	if err := o.bindIds(qIds, qhkIds, route.Formats); err != nil {
 		res = append(res, err)
@@ -210,7 +221,7 @@ func (o *GetBeersRouteParams) BindRequest(r *http.Request, route *middleware.Mat
 	return nil
 }
 
-func (o *GetBeersRouteParams) Validate(formats strfmt.Registry) error {
+func (o *GetBeerRouteParams) Validate(formats strfmt.Registry) error {
 	var res []error
 
 	// abv_gt
@@ -265,6 +276,14 @@ func (o *GetBeersRouteParams) Validate(formats strfmt.Registry) error {
 	// Required: false
 	// AllowEmptyValue: false
 
+	// id
+	// Required: true
+	// Parameter is provided by construction from the route
+
+	if err := o.validateID(formats); err != nil {
+		res = append(res, err)
+	}
+
 	// ids
 	// Required: false
 	// AllowEmptyValue: false
@@ -300,7 +319,7 @@ func (o *GetBeersRouteParams) Validate(formats strfmt.Registry) error {
 }
 
 // bindAbvGt binds and validates parameter AbvGt from query.
-func (o *GetBeersRouteParams) bindAbvGt(rawData []string, hasKey bool, formats strfmt.Registry) error {
+func (o *GetBeerRouteParams) bindAbvGt(rawData []string, hasKey bool, formats strfmt.Registry) error {
 	var raw string
 	if len(rawData) > 0 {
 		raw = rawData[len(rawData)-1]
@@ -322,7 +341,7 @@ func (o *GetBeersRouteParams) bindAbvGt(rawData []string, hasKey bool, formats s
 }
 
 // bindAbvLt binds and validates parameter AbvLt from query.
-func (o *GetBeersRouteParams) bindAbvLt(rawData []string, hasKey bool, formats strfmt.Registry) error {
+func (o *GetBeerRouteParams) bindAbvLt(rawData []string, hasKey bool, formats strfmt.Registry) error {
 	var raw string
 	if len(rawData) > 0 {
 		raw = rawData[len(rawData)-1]
@@ -344,7 +363,7 @@ func (o *GetBeersRouteParams) bindAbvLt(rawData []string, hasKey bool, formats s
 }
 
 // bindBeerName binds and validates parameter BeerName from query.
-func (o *GetBeersRouteParams) bindBeerName(rawData []string, hasKey bool, formats strfmt.Registry) error {
+func (o *GetBeerRouteParams) bindBeerName(rawData []string, hasKey bool, formats strfmt.Registry) error {
 	var raw string
 	if len(rawData) > 0 {
 		raw = rawData[len(rawData)-1]
@@ -362,7 +381,7 @@ func (o *GetBeersRouteParams) bindBeerName(rawData []string, hasKey bool, format
 }
 
 // bindBrewedAfter binds and validates parameter BrewedAfter from query.
-func (o *GetBeersRouteParams) bindBrewedAfter(rawData []string, hasKey bool, formats strfmt.Registry) error {
+func (o *GetBeerRouteParams) bindBrewedAfter(rawData []string, hasKey bool, formats strfmt.Registry) error {
 	var raw string
 	if len(rawData) > 0 {
 		raw = rawData[len(rawData)-1]
@@ -389,7 +408,7 @@ func (o *GetBeersRouteParams) bindBrewedAfter(rawData []string, hasKey bool, for
 }
 
 // validateBrewedAfter carries on validations for parameter BrewedAfter
-func (o *GetBeersRouteParams) validateBrewedAfter(formats strfmt.Registry) error {
+func (o *GetBeerRouteParams) validateBrewedAfter(formats strfmt.Registry) error {
 
 	// Required: false
 	if o.BrewedAfter == nil {
@@ -403,7 +422,7 @@ func (o *GetBeersRouteParams) validateBrewedAfter(formats strfmt.Registry) error
 }
 
 // bindBrewedBefore binds and validates parameter BrewedBefore from query.
-func (o *GetBeersRouteParams) bindBrewedBefore(rawData []string, hasKey bool, formats strfmt.Registry) error {
+func (o *GetBeerRouteParams) bindBrewedBefore(rawData []string, hasKey bool, formats strfmt.Registry) error {
 	var raw string
 	if len(rawData) > 0 {
 		raw = rawData[len(rawData)-1]
@@ -430,7 +449,7 @@ func (o *GetBeersRouteParams) bindBrewedBefore(rawData []string, hasKey bool, fo
 }
 
 // validateBrewedBefore carries on validations for parameter BrewedBefore
-func (o *GetBeersRouteParams) validateBrewedBefore(formats strfmt.Registry) error {
+func (o *GetBeerRouteParams) validateBrewedBefore(formats strfmt.Registry) error {
 
 	// Required: false
 	if o.BrewedBefore == nil {
@@ -444,7 +463,7 @@ func (o *GetBeersRouteParams) validateBrewedBefore(formats strfmt.Registry) erro
 }
 
 // bindEbcGt binds and validates parameter EbcGt from query.
-func (o *GetBeersRouteParams) bindEbcGt(rawData []string, hasKey bool, formats strfmt.Registry) error {
+func (o *GetBeerRouteParams) bindEbcGt(rawData []string, hasKey bool, formats strfmt.Registry) error {
 	var raw string
 	if len(rawData) > 0 {
 		raw = rawData[len(rawData)-1]
@@ -466,7 +485,7 @@ func (o *GetBeersRouteParams) bindEbcGt(rawData []string, hasKey bool, formats s
 }
 
 // bindEbcLt binds and validates parameter EbcLt from query.
-func (o *GetBeersRouteParams) bindEbcLt(rawData []string, hasKey bool, formats strfmt.Registry) error {
+func (o *GetBeerRouteParams) bindEbcLt(rawData []string, hasKey bool, formats strfmt.Registry) error {
 	var raw string
 	if len(rawData) > 0 {
 		raw = rawData[len(rawData)-1]
@@ -488,7 +507,7 @@ func (o *GetBeersRouteParams) bindEbcLt(rawData []string, hasKey bool, formats s
 }
 
 // bindFood binds and validates parameter Food from query.
-func (o *GetBeersRouteParams) bindFood(rawData []string, hasKey bool, formats strfmt.Registry) error {
+func (o *GetBeerRouteParams) bindFood(rawData []string, hasKey bool, formats strfmt.Registry) error {
 	var raw string
 	if len(rawData) > 0 {
 		raw = rawData[len(rawData)-1]
@@ -506,7 +525,7 @@ func (o *GetBeersRouteParams) bindFood(rawData []string, hasKey bool, formats st
 }
 
 // bindHops binds and validates parameter Hops from query.
-func (o *GetBeersRouteParams) bindHops(rawData []string, hasKey bool, formats strfmt.Registry) error {
+func (o *GetBeerRouteParams) bindHops(rawData []string, hasKey bool, formats strfmt.Registry) error {
 	var raw string
 	if len(rawData) > 0 {
 		raw = rawData[len(rawData)-1]
@@ -524,7 +543,7 @@ func (o *GetBeersRouteParams) bindHops(rawData []string, hasKey bool, formats st
 }
 
 // bindIbuGt binds and validates parameter IbuGt from query.
-func (o *GetBeersRouteParams) bindIbuGt(rawData []string, hasKey bool, formats strfmt.Registry) error {
+func (o *GetBeerRouteParams) bindIbuGt(rawData []string, hasKey bool, formats strfmt.Registry) error {
 	var raw string
 	if len(rawData) > 0 {
 		raw = rawData[len(rawData)-1]
@@ -546,7 +565,7 @@ func (o *GetBeersRouteParams) bindIbuGt(rawData []string, hasKey bool, formats s
 }
 
 // bindIbuLt binds and validates parameter IbuLt from query.
-func (o *GetBeersRouteParams) bindIbuLt(rawData []string, hasKey bool, formats strfmt.Registry) error {
+func (o *GetBeerRouteParams) bindIbuLt(rawData []string, hasKey bool, formats strfmt.Registry) error {
 	var raw string
 	if len(rawData) > 0 {
 		raw = rawData[len(rawData)-1]
@@ -567,8 +586,41 @@ func (o *GetBeersRouteParams) bindIbuLt(rawData []string, hasKey bool, formats s
 	return nil
 }
 
+// bindID binds and validates parameter ID from path.
+func (o *GetBeerRouteParams) bindID(rawData []string, hasKey bool, formats strfmt.Registry) error {
+	var raw string
+	if len(rawData) > 0 {
+		raw = rawData[len(rawData)-1]
+	}
+
+	// Required: true
+	// Parameter is provided by construction from the route
+
+	value, err := swag.ConvertInt64(raw)
+	if err != nil {
+		return errors.InvalidType("id", "path", "int64", raw)
+	}
+	o.ID = value
+
+	if err := o.validateID(formats); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+// validateID carries on validations for parameter ID
+func (o *GetBeerRouteParams) validateID(formats strfmt.Registry) error {
+
+	if err := validate.MinimumInt("id", "path", int64(o.ID), 0, false); err != nil {
+		return err
+	}
+
+	return nil
+}
+
 // bindIds binds and validates parameter Ids from query.
-func (o *GetBeersRouteParams) bindIds(rawData []string, hasKey bool, formats strfmt.Registry) error {
+func (o *GetBeerRouteParams) bindIds(rawData []string, hasKey bool, formats strfmt.Registry) error {
 	var raw string
 	if len(rawData) > 0 {
 		raw = rawData[len(rawData)-1]
@@ -586,7 +638,7 @@ func (o *GetBeersRouteParams) bindIds(rawData []string, hasKey bool, formats str
 }
 
 // bindMalt binds and validates parameter Malt from query.
-func (o *GetBeersRouteParams) bindMalt(rawData []string, hasKey bool, formats strfmt.Registry) error {
+func (o *GetBeerRouteParams) bindMalt(rawData []string, hasKey bool, formats strfmt.Registry) error {
 	var raw string
 	if len(rawData) > 0 {
 		raw = rawData[len(rawData)-1]
@@ -604,7 +656,7 @@ func (o *GetBeersRouteParams) bindMalt(rawData []string, hasKey bool, formats st
 }
 
 // bindPage binds and validates parameter Page from query.
-func (o *GetBeersRouteParams) bindPage(rawData []string, hasKey bool, formats strfmt.Registry) error {
+func (o *GetBeerRouteParams) bindPage(rawData []string, hasKey bool, formats strfmt.Registry) error {
 	var raw string
 	if len(rawData) > 0 {
 		raw = rawData[len(rawData)-1]
@@ -613,7 +665,7 @@ func (o *GetBeersRouteParams) bindPage(rawData []string, hasKey bool, formats st
 	// Required: false
 	// AllowEmptyValue: false
 	if raw == "" { // empty values pass all other validations
-		// Default values have been previously initialized by NewGetBeersRouteParams()
+		// Default values have been previously initialized by NewGetBeerRouteParams()
 		return nil
 	}
 
@@ -631,7 +683,7 @@ func (o *GetBeersRouteParams) bindPage(rawData []string, hasKey bool, formats st
 }
 
 // validatePage carries on validations for parameter Page
-func (o *GetBeersRouteParams) validatePage(formats strfmt.Registry) error {
+func (o *GetBeerRouteParams) validatePage(formats strfmt.Registry) error {
 
 	// Required: false
 	if o.Page == nil {
@@ -646,7 +698,7 @@ func (o *GetBeersRouteParams) validatePage(formats strfmt.Registry) error {
 }
 
 // bindPerPage binds and validates parameter PerPage from query.
-func (o *GetBeersRouteParams) bindPerPage(rawData []string, hasKey bool, formats strfmt.Registry) error {
+func (o *GetBeerRouteParams) bindPerPage(rawData []string, hasKey bool, formats strfmt.Registry) error {
 	var raw string
 	if len(rawData) > 0 {
 		raw = rawData[len(rawData)-1]
@@ -655,7 +707,7 @@ func (o *GetBeersRouteParams) bindPerPage(rawData []string, hasKey bool, formats
 	// Required: false
 	// AllowEmptyValue: false
 	if raw == "" { // empty values pass all other validations
-		// Default values have been previously initialized by NewGetBeersRouteParams()
+		// Default values have been previously initialized by NewGetBeerRouteParams()
 		return nil
 	}
 
@@ -673,7 +725,7 @@ func (o *GetBeersRouteParams) bindPerPage(rawData []string, hasKey bool, formats
 }
 
 // validatePerPage carries on validations for parameter PerPage
-func (o *GetBeersRouteParams) validatePerPage(formats strfmt.Registry) error {
+func (o *GetBeerRouteParams) validatePerPage(formats strfmt.Registry) error {
 
 	// Required: false
 	if o.PerPage == nil {
@@ -688,7 +740,7 @@ func (o *GetBeersRouteParams) validatePerPage(formats strfmt.Registry) error {
 }
 
 // bindYeast binds and validates parameter Yeast from query.
-func (o *GetBeersRouteParams) bindYeast(rawData []string, hasKey bool, formats strfmt.Registry) error {
+func (o *GetBeerRouteParams) bindYeast(rawData []string, hasKey bool, formats strfmt.Registry) error {
 	var raw string
 	if len(rawData) > 0 {
 		raw = rawData[len(rawData)-1]
