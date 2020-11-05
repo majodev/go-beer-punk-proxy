@@ -9,6 +9,7 @@ import (
 
 	"github.com/allaboutapps/integresql-client-go"
 	"github.com/allaboutapps/integresql-client-go/pkg/util"
+	"github.com/majodev/go-beer-punk-proxy/internal/data"
 	pUtil "github.com/majodev/go-beer-punk-proxy/internal/util"
 	migrate "github.com/rubenv/sql-migrate"
 	"github.com/volatiletech/sqlboiler/v4/boil"
@@ -162,6 +163,22 @@ func insertFixtures(ctx context.Context, t *testing.T, db *sql.DB) error {
 
 	for _, fixture := range inserts {
 		if err := fixture.Insert(ctx, db, boil.Infer()); err != nil {
+			if err := tx.Rollback(); err != nil {
+				return err
+			}
+
+			return err
+		}
+	}
+
+	beers, err := data.GetUpsertableBeerModels()
+
+	if err != nil {
+		return err
+	}
+
+	for _, beer := range beers {
+		if err := beer.Insert(ctx, db, boil.Infer()); err != nil {
 			if err := tx.Rollback(); err != nil {
 				return err
 			}

@@ -63,6 +63,22 @@ func applyFixtures() error {
 		}
 	}
 
+	beers, err := data.GetUpsertableBeerModels()
+
+	if err != nil {
+		return err
+	}
+
+	for _, beer := range beers {
+		if err := beer.Upsert(ctx, db, true, nil, boil.Infer(), boil.Infer()); err != nil {
+			if err := tx.Rollback(); err != nil {
+				return err
+			}
+
+			return err
+		}
+	}
+
 	if err := tx.Commit(); err != nil {
 		return err
 	}
