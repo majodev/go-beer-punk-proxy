@@ -23,7 +23,7 @@ func NewGetBeersRouteParams() GetBeersRouteParams {
 	var (
 		// initialize parameters with default values
 
-		pageDefault    = int64(0)
+		pageDefault    = int64(1)
 		perPageDefault = int64(25)
 	)
 
@@ -96,12 +96,13 @@ type GetBeersRouteParams struct {
 	*/
 	Malt *string `query:"malt"`
 	/*page
-	  Minimum: 0
+	  Minimum: 1
 	  In: query
-	  Default: 0
+	  Default: 1
 	*/
 	Page *int64 `query:"page"`
 	/*per_page
+	  Maximum: 80
 	  Minimum: 1
 	  In: query
 	  Default: 25
@@ -638,7 +639,7 @@ func (o *GetBeersRouteParams) validatePage(formats strfmt.Registry) error {
 		return nil
 	}
 
-	if err := validate.MinimumInt("page", "query", int64(*o.Page), 0, false); err != nil {
+	if err := validate.MinimumInt("page", "query", int64(*o.Page), 1, false); err != nil {
 		return err
 	}
 
@@ -681,6 +682,10 @@ func (o *GetBeersRouteParams) validatePerPage(formats strfmt.Registry) error {
 	}
 
 	if err := validate.MinimumInt("per_page", "query", int64(*o.PerPage), 1, false); err != nil {
+		return err
+	}
+
+	if err := validate.MaximumInt("per_page", "query", int64(*o.PerPage), 80, false); err != nil {
 		return err
 	}
 

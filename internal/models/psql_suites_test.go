@@ -10,6 +10,8 @@ func TestUpsert(t *testing.T) {
 
 	t.Run("AppUserProfiles", testAppUserProfilesUpsert)
 
+	t.Run("Beers", testBeersUpsert)
+
 	t.Run("PasswordResetTokens", testPasswordResetTokensUpsert)
 
 	t.Run("PushTokens", testPushTokensUpsert)

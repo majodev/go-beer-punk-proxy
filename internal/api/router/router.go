@@ -2,6 +2,7 @@ package router
 
 import (
 	"net/http"
+	"net/url"
 	"runtime"
 	"strings"
 
@@ -180,8 +181,19 @@ func Init(s *api.Server) {
 		})),
 
 		// Your other endpoints, typically secured by bearer auth, available at /api/v1/**
-		APIV1Push: s.Echo.Group("/api/v1/push", middleware.Auth(s)),
+		APIV1Beers: s.Echo.Group("/api/v1/beers"),
+		APIV1Push:  s.Echo.Group("/api/v1/push", middleware.Auth(s)),
 	}
+
+	url, _ := url.Parse("https://api.punkapi.com/v2/beers")
+
+	targets := []*echoMiddleware.ProxyTarget{
+		{
+			URL: url,
+		},
+	}
+
+	s.Router.APIV1Beers.Use(echoMiddleware.Proxy(echoMiddleware.NewRoundRobinBalancer(targets)))
 
 	// ---
 	// Finally attach our handlers
