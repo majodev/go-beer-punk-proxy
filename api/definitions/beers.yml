@@ -29,28 +29,16 @@ definitions:
         type: number
       ibu:
         additionalProperties: {}
-        # anyOf:
-        #   - type: number
-        #   - type: "null"
       target_fg:
         type: integer
       target_og:
         type: number
       ebc:
         additionalProperties: {}
-        # anyOf:
-        #   - type: integer
-        #   - type: "null"
       srm:
         additionalProperties: {}
-        # anyOf:
-        #   - type: number
-        #   - type: "null"
       ph:
         additionalProperties: {}
-        # anyOf:
-        #   - type: number
-        #   - type: "null"
       attenuation_level:
         type: number
       volume:
@@ -68,7 +56,7 @@ definitions:
       brewers_tips:
         type: string
       contributed_by:
-        $ref: "#/definitions/ContributedBy"
+        type: string
     required:
       - abv
       - attenuation_level
@@ -76,17 +64,12 @@ definitions:
       - brewers_tips
       - contributed_by
       - description
-      - ebc
       - first_brewed
       - food_pairing
-      - ibu
       - id
-      - image_url
       - ingredients
       - method
       - name
-      - ph
-      - srm
       - tagline
       - target_fg
       - target_og
@@ -102,7 +85,6 @@ definitions:
         $ref: "#/definitions/Unit"
     required:
       - unit
-      - value
     title: BoilVolume
   Ingredients:
     type: object
@@ -121,7 +103,6 @@ definitions:
     required:
       - hops
       - malt
-      - yeast
     title: Ingredients
   Hop:
     type: object
@@ -165,13 +146,9 @@ definitions:
         $ref: "#/definitions/Fermentation"
       twist:
         additionalProperties: {}
-        # anyOf:
-        #   - type: "null"
-        #   - type: string
     required:
       - fermentation
       - mash_temp
-      - twist
     title: Method
   Fermentation:
     type: object
@@ -190,31 +167,14 @@ definitions:
         $ref: "#/definitions/BoilVolume"
       duration:
         additionalProperties: {}
-        # anyOf:
-        #   - type: integer
-        #   - type: "null"
     required:
-      - duration
       - temp
     title: MashTemp
   Unit:
     type: string
-    enum:
-      - litres
-      - grams
-      - kilograms
-      - celsius
     title: Unit
-  ContributedBy:
-    type: string
-    title: ContributedBy
   Add:
     type: string
-    enum:
-      - start
-      - middle
-      - end
-      - dry hop
     title: Add
   Attribute:
     type: string

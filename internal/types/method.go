@@ -28,8 +28,7 @@ type Method struct {
 	MashTemp []*MashTemp `json:"mash_temp"`
 
 	// twist
-	// Required: true
-	Twist interface{} `json:"twist"`
+	Twist interface{} `json:"twist,omitempty"`
 }
 
 // Validate validates this method
@@ -41,10 +40,6 @@ func (m *Method) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateMashTemp(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if err := m.validateTwist(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -92,15 +87,6 @@ func (m *Method) validateMashTemp(formats strfmt.Registry) error {
 			}
 		}
 
-	}
-
-	return nil
-}
-
-func (m *Method) validateTwist(formats strfmt.Registry) error {
-
-	if err := validate.Required("twist", "body", m.Twist); err != nil {
-		return err
 	}
 
 	return nil

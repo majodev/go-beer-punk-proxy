@@ -5,6 +5,7 @@ import (
 	"github.com/labstack/echo/v4"
 	"github.com/majodev/go-beer-punk-proxy/internal/api"
 	"github.com/majodev/go-beer-punk-proxy/internal/api/handlers/auth"
+	"github.com/majodev/go-beer-punk-proxy/internal/api/handlers/beers"
 	"github.com/majodev/go-beer-punk-proxy/internal/api/handlers/common"
 	"github.com/majodev/go-beer-punk-proxy/internal/api/handlers/push"
 )
@@ -20,6 +21,7 @@ func AttachAllRoutes(s *api.Server) {
 		auth.PostLogoutRoute(s),
 		auth.PostRefreshRoute(s),
 		auth.PostRegisterRoute(s),
+		beers.GetBeersRoute(s),
 		common.GetHealthyRoute(s),
 		common.GetReadyRoute(s),
 		common.GetSwaggerRoute(s),

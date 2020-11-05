@@ -28,8 +28,7 @@ type Ingredients struct {
 	Malt []*Malt `json:"malt"`
 
 	// yeast
-	// Required: true
-	Yeast *string `json:"yeast"`
+	Yeast string `json:"yeast,omitempty"`
 }
 
 // Validate validates this ingredients
@@ -41,10 +40,6 @@ func (m *Ingredients) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateMalt(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if err := m.validateYeast(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -99,15 +94,6 @@ func (m *Ingredients) validateMalt(formats strfmt.Registry) error {
 			}
 		}
 
-	}
-
-	return nil
-}
-
-func (m *Ingredients) validateYeast(formats strfmt.Registry) error {
-
-	if err := validate.Required("yeast", "body", m.Yeast); err != nil {
-		return err
 	}
 
 	return nil

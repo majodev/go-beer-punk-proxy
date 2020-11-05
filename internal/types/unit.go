@@ -6,11 +6,7 @@ package types
 // Editing this file might prove futile when you re-run the swagger generate command
 
 import (
-	"encoding/json"
-
-	"github.com/go-openapi/errors"
 	"github.com/go-openapi/strfmt"
-	"github.com/go-openapi/validate"
 )
 
 // Unit Unit
@@ -18,52 +14,7 @@ import (
 // swagger:model unit
 type Unit string
 
-const (
-
-	// UnitLitres captures enum value "litres"
-	UnitLitres Unit = "litres"
-
-	// UnitGrams captures enum value "grams"
-	UnitGrams Unit = "grams"
-
-	// UnitKilograms captures enum value "kilograms"
-	UnitKilograms Unit = "kilograms"
-
-	// UnitCelsius captures enum value "celsius"
-	UnitCelsius Unit = "celsius"
-)
-
-// for schema
-var unitEnum []interface{}
-
-func init() {
-	var res []Unit
-	if err := json.Unmarshal([]byte(`["litres","grams","kilograms","celsius"]`), &res); err != nil {
-		panic(err)
-	}
-	for _, v := range res {
-		unitEnum = append(unitEnum, v)
-	}
-}
-
-func (m Unit) validateUnitEnum(path, location string, value Unit) error {
-	if err := validate.EnumCase(path, location, value, unitEnum, true); err != nil {
-		return err
-	}
-	return nil
-}
-
 // Validate validates this unit
 func (m Unit) Validate(formats strfmt.Registry) error {
-	var res []error
-
-	// value enum
-	if err := m.validateUnitEnum("", "body", m); err != nil {
-		return err
-	}
-
-	if len(res) > 0 {
-		return errors.CompositeValidationError(res...)
-	}
 	return nil
 }

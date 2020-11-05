@@ -22,8 +22,9 @@ var (
 	// tracks template testDatabase initialization
 	doOnce sync.Once
 
-	migDir  = filepath.Join(pUtil.GetProjectRootDir(), "/migrations")
-	fixFile = filepath.Join(pUtil.GetProjectRootDir(), "/internal/test/fixtures.go")
+	migDir   = filepath.Join(pUtil.GetProjectRootDir(), "/migrations")
+	fixFile  = filepath.Join(pUtil.GetProjectRootDir(), "/internal/test/fixtures.go")
+	selfFile = filepath.Join(pUtil.GetProjectRootDir(), "/internal/test/test_database.go")
 )
 
 // Use this utility func to test with an isolated test database
@@ -127,7 +128,7 @@ func initTestDatabaseHash(t *testing.T) {
 
 	t.Helper()
 
-	h, err := util.GetTemplateHash(migDir, fixFile)
+	h, err := util.GetTemplateHash(migDir, fixFile, selfFile)
 	if err != nil {
 		t.Fatalf("Failed to get template hash: %#v", err)
 	}

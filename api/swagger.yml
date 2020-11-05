@@ -418,11 +418,6 @@ definitions:
   add:
     type: string
     title: Add
-    enum:
-    - start
-    - middle
-    - end
-    - dry hop
   attribute:
     type: string
     title: Attribute
@@ -436,17 +431,12 @@ definitions:
     - brewers_tips
     - contributed_by
     - description
-    - ebc
     - first_brewed
     - food_pairing
-    - ibu
     - id
-    - image_url
     - ingredients
     - method
     - name
-    - ph
-    - srm
     - tagline
     - target_fg
     - target_og
@@ -461,7 +451,7 @@ definitions:
       brewers_tips:
         type: string
       contributed_by:
-        $ref: '#/definitions/contributedBy'
+        type: string
       description:
         type: string
       ebc:
@@ -503,16 +493,12 @@ definitions:
     title: BoilVolume
     required:
     - unit
-    - value
     properties:
       unit:
         $ref: '#/definitions/unit'
       value:
         type: number
     additionalProperties: false
-  contributedBy:
-    type: string
-    title: ContributedBy
   fermentation:
     type: object
     title: Fermentation
@@ -596,7 +582,6 @@ definitions:
     required:
     - hops
     - malt
-    - yeast
     properties:
       hops:
         type: array
@@ -625,7 +610,6 @@ definitions:
     type: object
     title: MashTemp
     required:
-    - duration
     - temp
     properties:
       duration:
@@ -639,7 +623,6 @@ definitions:
     required:
     - fermentation
     - mash_temp
-    - twist
     properties:
       fermentation:
         $ref: '#/definitions/fermentation'
@@ -849,11 +832,6 @@ definitions:
   unit:
     type: string
     title: Unit
-    enum:
-    - litres
-    - grams
-    - kilograms
-    - celsius
 responses:
   AuthForbiddenResponse:
     description: PublicHTTPError, type `USER_DEACTIVATED`/`NOT_LOCAL_USER`

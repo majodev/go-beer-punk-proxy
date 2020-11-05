@@ -18,8 +18,7 @@ import (
 type MashTemp struct {
 
 	// duration
-	// Required: true
-	Duration interface{} `json:"duration"`
+	Duration interface{} `json:"duration,omitempty"`
 
 	// temp
 	// Required: true
@@ -30,10 +29,6 @@ type MashTemp struct {
 func (m *MashTemp) Validate(formats strfmt.Registry) error {
 	var res []error
 
-	if err := m.validateDuration(formats); err != nil {
-		res = append(res, err)
-	}
-
 	if err := m.validateTemp(formats); err != nil {
 		res = append(res, err)
 	}
@@ -41,15 +36,6 @@ func (m *MashTemp) Validate(formats strfmt.Registry) error {
 	if len(res) > 0 {
 		return errors.CompositeValidationError(res...)
 	}
-	return nil
-}
-
-func (m *MashTemp) validateDuration(formats strfmt.Registry) error {
-
-	if err := validate.Required("duration", "body", m.Duration); err != nil {
-		return err
-	}
-
 	return nil
 }
 

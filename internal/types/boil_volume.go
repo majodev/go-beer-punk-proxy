@@ -9,7 +9,6 @@ import (
 	"github.com/go-openapi/errors"
 	"github.com/go-openapi/strfmt"
 	"github.com/go-openapi/swag"
-	"github.com/go-openapi/validate"
 )
 
 // BoilVolume BoilVolume
@@ -22,8 +21,7 @@ type BoilVolume struct {
 	Unit Unit `json:"unit"`
 
 	// value
-	// Required: true
-	Value *float64 `json:"value"`
+	Value float64 `json:"value,omitempty"`
 }
 
 // Validate validates this boil volume
@@ -31,10 +29,6 @@ func (m *BoilVolume) Validate(formats strfmt.Registry) error {
 	var res []error
 
 	if err := m.validateUnit(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if err := m.validateValue(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -50,15 +44,6 @@ func (m *BoilVolume) validateUnit(formats strfmt.Registry) error {
 		if ve, ok := err.(*errors.Validation); ok {
 			return ve.ValidateName("unit")
 		}
-		return err
-	}
-
-	return nil
-}
-
-func (m *BoilVolume) validateValue(formats strfmt.Registry) error {
-
-	if err := validate.Required("value", "body", m.Value); err != nil {
 		return err
 	}
 

@@ -35,15 +35,14 @@ type Beer struct {
 
 	// contributed by
 	// Required: true
-	ContributedBy ContributedBy `json:"contributed_by"`
+	ContributedBy *string `json:"contributed_by"`
 
 	// description
 	// Required: true
 	Description *string `json:"description"`
 
 	// ebc
-	// Required: true
-	Ebc interface{} `json:"ebc"`
+	Ebc interface{} `json:"ebc,omitempty"`
 
 	// first brewed
 	// Required: true
@@ -54,17 +53,15 @@ type Beer struct {
 	FoodPairing []string `json:"food_pairing"`
 
 	// ibu
-	// Required: true
-	Ibu interface{} `json:"ibu"`
+	Ibu interface{} `json:"ibu,omitempty"`
 
 	// id
 	// Required: true
 	ID *int64 `json:"id"`
 
 	// image url
-	// Required: true
 	// Format: uri
-	ImageURL *strfmt.URI `json:"image_url"`
+	ImageURL strfmt.URI `json:"image_url,omitempty"`
 
 	// ingredients
 	// Required: true
@@ -79,12 +76,10 @@ type Beer struct {
 	Name *string `json:"name"`
 
 	// ph
-	// Required: true
-	Ph interface{} `json:"ph"`
+	Ph interface{} `json:"ph,omitempty"`
 
 	// srm
-	// Required: true
-	Srm interface{} `json:"srm"`
+	Srm interface{} `json:"srm,omitempty"`
 
 	// tagline
 	// Required: true
@@ -131,19 +126,11 @@ func (m *Beer) Validate(formats strfmt.Registry) error {
 		res = append(res, err)
 	}
 
-	if err := m.validateEbc(formats); err != nil {
-		res = append(res, err)
-	}
-
 	if err := m.validateFirstBrewed(formats); err != nil {
 		res = append(res, err)
 	}
 
 	if err := m.validateFoodPairing(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if err := m.validateIbu(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -164,14 +151,6 @@ func (m *Beer) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateName(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if err := m.validatePh(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if err := m.validateSrm(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -244,10 +223,7 @@ func (m *Beer) validateBrewersTips(formats strfmt.Registry) error {
 
 func (m *Beer) validateContributedBy(formats strfmt.Registry) error {
 
-	if err := m.ContributedBy.Validate(formats); err != nil {
-		if ve, ok := err.(*errors.Validation); ok {
-			return ve.ValidateName("contributed_by")
-		}
+	if err := validate.Required("contributed_by", "body", m.ContributedBy); err != nil {
 		return err
 	}
 
@@ -257,15 +233,6 @@ func (m *Beer) validateContributedBy(formats strfmt.Registry) error {
 func (m *Beer) validateDescription(formats strfmt.Registry) error {
 
 	if err := validate.Required("description", "body", m.Description); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-func (m *Beer) validateEbc(formats strfmt.Registry) error {
-
-	if err := validate.Required("ebc", "body", m.Ebc); err != nil {
 		return err
 	}
 
@@ -290,15 +257,6 @@ func (m *Beer) validateFoodPairing(formats strfmt.Registry) error {
 	return nil
 }
 
-func (m *Beer) validateIbu(formats strfmt.Registry) error {
-
-	if err := validate.Required("ibu", "body", m.Ibu); err != nil {
-		return err
-	}
-
-	return nil
-}
-
 func (m *Beer) validateID(formats strfmt.Registry) error {
 
 	if err := validate.Required("id", "body", m.ID); err != nil {
@@ -310,8 +268,8 @@ func (m *Beer) validateID(formats strfmt.Registry) error {
 
 func (m *Beer) validateImageURL(formats strfmt.Registry) error {
 
-	if err := validate.Required("image_url", "body", m.ImageURL); err != nil {
-		return err
+	if swag.IsZero(m.ImageURL) { // not required
+		return nil
 	}
 
 	if err := validate.FormatOf("image_url", "body", "uri", m.ImageURL.String(), formats); err != nil {
@@ -360,24 +318,6 @@ func (m *Beer) validateMethod(formats strfmt.Registry) error {
 func (m *Beer) validateName(formats strfmt.Registry) error {
 
 	if err := validate.Required("name", "body", m.Name); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-func (m *Beer) validatePh(formats strfmt.Registry) error {
-
-	if err := validate.Required("ph", "body", m.Ph); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-func (m *Beer) validateSrm(formats strfmt.Registry) error {
-
-	if err := validate.Required("srm", "body", m.Srm); err != nil {
 		return err
 	}
 
