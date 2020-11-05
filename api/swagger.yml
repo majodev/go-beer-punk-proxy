@@ -269,7 +269,7 @@ paths:
     get:
       security:
       - Bearer: []
-      description: Mirror of https://punkapi.com/documentation/v2
+      description: A partial reimplementation of https://punkapi.com/documentation/v2
       tags:
       - beers
       summary: Get beers
@@ -316,43 +316,6 @@ paths:
         x-nullable: true
         description: Returns all beers matching the supplied name (this will match partial strings as well so e.g punk will return Punk IPA), if you need to add spaces just add an underscore (_).
         name: beer_name
-        in: query
-      - type: string
-        x-nullable: true
-        description: Returns all beers matching the supplied yeast name, this performs a fuzzy match, if you need to add spaces just add an underscore (_).
-        name: yeast
-        in: query
-      - type: string
-        format: date-time
-        x-nullable: true
-        description: Returns all beers brewed before this date, the date format is mm-yyyy e.g 10-2011
-        name: brewed_before
-        in: query
-      - type: string
-        format: date-time
-        x-nullable: true
-        description: Returns all beers brewed after this date, the date format is mm-yyyy e.g 10-2011
-        name: brewed_after
-        in: query
-      - type: string
-        x-nullable: true
-        description: Returns all beers matching the supplied hops name, this performs a fuzzy match, if you need to add spaces just add an underscore (_).
-        name: hops
-        in: query
-      - type: string
-        x-nullable: true
-        description: Returns all beers matching the supplied malt name, this performs a fuzzy match, if you need to add spaces just add an underscore (_).
-        name: malt
-        in: query
-      - type: string
-        x-nullable: true
-        description: Returns all beers matching the supplied food string, this performs a fuzzy match, if you need to add spaces just add an underscore (_).
-        name: food
-        in: query
-      - type: string
-        x-nullable: true
-        description: Returns all beers matching the supplied ID's. You can pass in multiple ID's by separating them with a | symbol.
-        name: ids
         in: query
       responses:
         "200":
