@@ -209,7 +209,7 @@ COPY --from=builder /app/api/swagger.yml /app/api/
 COPY --from=builder /app/assets /app/assets/
 COPY --from=builder /app/migrations /app/migrations/
 COPY --from=builder /app/web /app/web/
-COPY --from=builder /docs/beers.json /docs/beers.json
+COPY --from=builder /app/docs/beers.json /app/docs/
 
 WORKDIR /app
 
