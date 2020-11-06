@@ -23,9 +23,10 @@ var (
 	doOnce sync.Once
 
 	// we will compute a db template hash over the following dirs/files
-	migDir   = filepath.Join(pUtil.GetProjectRootDir(), "/migrations")
-	fixFile  = filepath.Join(pUtil.GetProjectRootDir(), "/internal/test/fixtures.go")
-	selfFile = filepath.Join(pUtil.GetProjectRootDir(), "/internal/test/test_database.go")
+	migDir        = filepath.Join(pUtil.GetProjectRootDir(), "/migrations")
+	fixFile       = filepath.Join(pUtil.GetProjectRootDir(), "/internal/test/fixtures.go")
+	selfFile      = filepath.Join(pUtil.GetProjectRootDir(), "/internal/test/test_database.go")
+	beersJSONFile = filepath.Join(pUtil.GetProjectRootDir(), "/docs/beers.json")
 )
 
 // Use this utility func to test with an isolated test database
@@ -129,7 +130,7 @@ func initTestDatabaseHash(t *testing.T) {
 
 	t.Helper()
 
-	h, err := util.GetTemplateHash(migDir, fixFile, selfFile)
+	h, err := util.GetTemplateHash(migDir, fixFile, selfFile, beersJSONFile)
 	if err != nil {
 		t.Fatalf("Failed to get template hash: %#v", err)
 	}
