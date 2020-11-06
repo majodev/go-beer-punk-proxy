@@ -322,6 +322,45 @@ paths:
           description: GetBeersResponse
           schema:
             $ref: '#/definitions/getBeersResponse'
+  /api/v1/beers/random:
+    get:
+      security:
+      - Bearer: []
+      description: |-
+        Gets a random beer from the API, this takes no paramaters.
+        Mirror of https://punkapi.com/documentation/v2
+      tags:
+      - beers
+      summary: Get Random Beer
+      operationId: GetRandomBeerRoute
+      responses:
+        "200":
+          description: GetBeersResponse
+          schema:
+            $ref: '#/definitions/getBeersResponse'
+  /api/v1/beers/{id}:
+    get:
+      security:
+      - Bearer: []
+      description: |-
+        Gets a beer from the api using the beers id.
+        Mirror of https://punkapi.com/documentation/v2
+      tags:
+      - beers
+      summary: Get a Single Beer
+      operationId: GetBeerRoute
+      parameters:
+      - minimum: 1
+        type: integer
+        description: BeerID
+        name: id
+        in: path
+        required: true
+      responses:
+        "200":
+          description: GetBeersResponse
+          schema:
+            $ref: '#/definitions/getBeersResponse'
   /api/v1/push/test:
     get:
       security:

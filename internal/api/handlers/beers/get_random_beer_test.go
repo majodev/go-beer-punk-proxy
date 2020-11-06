@@ -11,26 +11,21 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-func TestGetBeers(t *testing.T) {
+func TestGetRandomBeer(t *testing.T) {
 	t.Parallel()
 
 	test.WithTestServer(t, func(s *api.Server) {
 
 		fixtures := test.Fixtures()
 
-		res := test.PerformRequest(t, s, "GET", "/api/v1/beers", nil, test.HeadersWithAuth(t, fixtures.User1AccessToken1.Token))
+		res := test.PerformRequest(t, s, "GET", "/api/v1/beers/random", nil, test.HeadersWithAuth(t, fixtures.User1AccessToken1.Token))
 		require.Equal(t, http.StatusOK, res.Result().StatusCode)
 
 		var response types.GetBeersResponse
 		test.ParseResponseAndValidate(t, res, &response)
 
-		assert.Len(t, response, 25)
+		assert.Len(t, response, 1)
 
-		// default check ordered by id
-		for i, beer := range response {
-			assert.Equal(t, i+1, int(*beer.ID))
-		}
-
-		test.Snapshoter.Save(t, response)
+		// fmt.Println(int(*response[0].ID))
 	})
 }
