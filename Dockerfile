@@ -209,6 +209,7 @@ COPY --from=builder /app/api/swagger.yml /app/api/
 COPY --from=builder /app/assets /app/assets/
 COPY --from=builder /app/migrations /app/migrations/
 COPY --from=builder /app/web /app/web/
+COPY --from=builder /docs/beers.json /docs/beers.json
 
 WORKDIR /app
 
@@ -224,4 +225,4 @@ WORKDIR /app
 # docker run <image> server
 # docker run <image> server --migrate
 ENTRYPOINT ["/app/app"]
-CMD ["server", "--migrate"]
+CMD ["server", "--migrate", "--seed"]
