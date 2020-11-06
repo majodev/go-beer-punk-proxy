@@ -22,6 +22,7 @@ var (
 	// tracks template testDatabase initialization
 	doOnce sync.Once
 
+	// we will compute a db template hash over the following dirs/files
 	migDir   = filepath.Join(pUtil.GetProjectRootDir(), "/migrations")
 	fixFile  = filepath.Join(pUtil.GetProjectRootDir(), "/internal/test/fixtures.go")
 	selfFile = filepath.Join(pUtil.GetProjectRootDir(), "/internal/test/test_database.go")
