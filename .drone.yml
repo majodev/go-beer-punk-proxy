@@ -9,7 +9,7 @@ matrix:
   include:
     - BUILD_ENV: all
       # The name of the k8s namespaces that these pipelines will target.
-      # K8S_DEPLOY_NS_DEV:
+      K8S_DEPLOY_NS_DEV: allaboutapps-beer-workshop-dev
       # K8S_DEPLOY_NS_STAGING:
       # K8S_DEPLOY_NS_PRODUCTION:
 
@@ -291,23 +291,23 @@ pipeline:
 # DEPLOYMENT
 # ---------------------------------------------------------------------------
 
-#   # autodeploy dev if it hits the branch
-#   "deploy ${DRONE_COMMIT_SHA:0:10} to ${K8S_DEPLOY_NS_DEV} (auto)":
-#     <<: *K8S_DEPLOY_SETTINGS
-#     namespace: ${K8S_DEPLOY_NS_DEV}
-#     mgmt_deployment_yaml: namespaces/${K8S_DEPLOY_NS_DEV}/app.deployment.yaml
-#     when:
-#       event: *BUILD_EVENTS
-#       branch: [dev]
+  # autodeploy dev if it hits the branch
+  "deploy ${DRONE_COMMIT_SHA:0:10} to ${K8S_DEPLOY_NS_DEV} (auto)":
+    <<: *K8S_DEPLOY_SETTINGS
+    namespace: ${K8S_DEPLOY_NS_DEV}
+    mgmt_deployment_yaml: namespaces/${K8S_DEPLOY_NS_DEV}/app.deployment.yaml
+    when:
+      event: *BUILD_EVENTS
+      branch: [dev]
 
-#   # promote dev through "drone deploy <repo> <build> dev"
-#   "deploy ${DRONE_COMMIT_SHA:0:10} to ${K8S_DEPLOY_NS_DEV} (promote)":
-#     <<: *K8S_DEPLOY_SETTINGS
-#     namespace: ${K8S_DEPLOY_NS_DEV}
-#     mgmt_deployment_yaml: namespaces/${K8S_DEPLOY_NS_DEV}/app.deployment.yaml
-#     when:
-#       environment: dev
-#       event: deployment
+  # promote dev through "drone deploy <repo> <build> dev"
+  "deploy ${DRONE_COMMIT_SHA:0:10} to ${K8S_DEPLOY_NS_DEV} (promote)":
+    <<: *K8S_DEPLOY_SETTINGS
+    namespace: ${K8S_DEPLOY_NS_DEV}
+    mgmt_deployment_yaml: namespaces/${K8S_DEPLOY_NS_DEV}/app.deployment.yaml
+    when:
+      environment: dev
+      event: deployment
 
 #   # autodeploy staging if it hits the branch
 #   "deploy ${DRONE_COMMIT_SHA:0:10} to ${K8S_DEPLOY_NS_STAGING} (auto)":
