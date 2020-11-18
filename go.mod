@@ -6,12 +6,12 @@ require (
 	github.com/allaboutapps/integresql-client-go v1.0.0
 	github.com/davecgh/go-spew v1.1.1
 	github.com/friendsofgo/errors v0.9.2
-	github.com/gabriel-vasile/mimetype v1.1.1
+	github.com/gabriel-vasile/mimetype v1.1.2
 	github.com/go-openapi/errors v0.19.8
-	github.com/go-openapi/runtime v0.19.23
-	github.com/go-openapi/strfmt v0.19.8
-	github.com/go-openapi/swag v0.19.11
-	github.com/go-openapi/validate v0.19.12
+	github.com/go-openapi/runtime v0.19.24
+	github.com/go-openapi/strfmt v0.19.11
+	github.com/go-openapi/swag v0.19.12
+	github.com/go-openapi/validate v0.19.13
 	github.com/jordan-wright/email v4.0.1-0.20200917010138-e1c00e156980+incompatible
 	github.com/kat-co/vala v0.0.0-20170210184112-42e1d8b61f12
 	github.com/labstack/echo/v4 v4.1.17
@@ -26,9 +26,9 @@ require (
 	github.com/stretchr/testify v1.6.1
 	github.com/volatiletech/null/v8 v8.1.0
 	github.com/volatiletech/randomize v0.0.1
-	github.com/volatiletech/sqlboiler/v4 v4.3.0
+	github.com/volatiletech/sqlboiler/v4 v4.3.1
 	github.com/volatiletech/strmangle v0.0.1
-	golang.org/x/crypto v0.0.0-20201016220609-9e8e0b390897
-	golang.org/x/sys v0.0.0-20201107080550-4d91cf3a1aaf
+	golang.org/x/crypto v0.0.0-20201116153603-4be66e5b6582
+	golang.org/x/sys v0.0.0-20201116194326-cc9327a14d48
 	google.golang.org/api v0.35.0
 )
