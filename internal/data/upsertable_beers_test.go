@@ -24,7 +24,7 @@ func TestUpsertBeers(t *testing.T) {
 		require.NoError(t, err)
 
 		for _, beer := range beers {
-			err := beer.Upsert(context.Background(), db, true, nil, boil.Infer(), boil.Infer())
+			err := beer.Upsert(context.Background(), tx, true, nil, boil.Infer(), boil.Infer())
 			require.NoError(t, err)
 		}
 

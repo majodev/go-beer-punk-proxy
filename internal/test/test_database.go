@@ -181,7 +181,7 @@ func insertFixtures(ctx context.Context, t *testing.T, db *sql.DB) error {
 	}
 
 	for _, beer := range beers {
-		if err := beer.Insert(ctx, db, boil.Infer()); err != nil {
+		if err := beer.Insert(ctx, tx, boil.Infer()); err != nil {
 			if err := tx.Rollback(); err != nil {
 				return err
 			}
