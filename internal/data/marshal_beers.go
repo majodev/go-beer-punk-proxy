@@ -1,4 +1,4 @@
-package beers
+package data
 
 import (
 	"github.com/go-openapi/strfmt"

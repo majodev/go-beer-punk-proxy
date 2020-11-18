@@ -70,7 +70,7 @@ func applyFixtures() error {
 	}
 
 	for _, beer := range beers {
-		if err := beer.Upsert(ctx, db, true, nil, boil.Infer(), boil.Infer()); err != nil {
+		if err := beer.Upsert(ctx, tx, true, nil, boil.Infer(), boil.Infer()); err != nil {
 			if err := tx.Rollback(); err != nil {
 				return err
 			}

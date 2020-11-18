@@ -5,6 +5,7 @@ import (
 
 	"github.com/labstack/echo/v4"
 	"github.com/majodev/go-beer-punk-proxy/internal/api"
+	"github.com/majodev/go-beer-punk-proxy/internal/data"
 	"github.com/majodev/go-beer-punk-proxy/internal/models"
 	"github.com/majodev/go-beer-punk-proxy/internal/util"
 	"github.com/volatiletech/sqlboiler/v4/queries/qm"
@@ -29,7 +30,7 @@ func getRandomBeerHandler(s *api.Server) echo.HandlerFunc {
 			return err
 		}
 
-		response, err := MarschalBeers(beers)
+		response, err := data.MarschalBeers(beers)
 
 		if err != nil {
 			return err

@@ -6,6 +6,7 @@ import (
 
 	"github.com/labstack/echo/v4"
 	"github.com/majodev/go-beer-punk-proxy/internal/api"
+	"github.com/majodev/go-beer-punk-proxy/internal/data"
 	"github.com/majodev/go-beer-punk-proxy/internal/models"
 	"github.com/majodev/go-beer-punk-proxy/internal/types/beers"
 	"github.com/majodev/go-beer-punk-proxy/internal/util"
@@ -69,7 +70,7 @@ func getBeersHandler(s *api.Server) echo.HandlerFunc {
 			return err
 		}
 
-		response, err := MarschalBeers(beers)
+		response, err := data.MarschalBeers(beers)
 
 		if err != nil {
 			return err

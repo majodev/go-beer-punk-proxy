@@ -4,11 +4,11 @@ To locally (re-)generate a schemacrawler diagramm, execute any of the following 
 
 ```bash
 # Note that the project must be already running within docker-compose (and the "spec" database should already be migrated via "make sql" or "make all").
-# First find out under which docker network the "allaboutapps.dev/aw/go-starter" project is available (as started via ./docker-helper.sh --up).
+# First find out under which docker network the "github.com/majodev/go-beer-punk-proxy" project is available (as started via ./docker-helper.sh --up).
 # Typically it's "<dir_name>_default".
 docker network ls
 # [...]
-# go-starter_default
+# go-beer-punk-proxy_default
 
 # Ensure you are within the /docs/schemacrawler directory
 cd docs/schemacrawler
@@ -16,10 +16,10 @@ pwd
 # [...]/docs/schemacrawler
 
 # Generate a png (exchange --network="..." with your docker network before executing this command)
-docker run --network=go-starter_default -v $(pwd):/home/schcrwlr/share -v $(pwd)/schemacrawler.config.properties:/opt/schemacrawler/config/schemacrawler.config.properties --entrypoint=/opt/schemacrawler/schemacrawler.sh schemacrawler/schemacrawler --server=postgresql --host=postgres --port=5432 --database=spec --schemas=public --user=dbuser --password=dbpass --info-level=standard --command=schema --portable-names --title "allaboutapps.dev/aw/go-starter" --output-format=png --output-file=/home/schcrwlr/share/schema.png
+docker run --network=go-beer-punk-proxy_default -v $(pwd):/home/schcrwlr/share -v $(pwd)/schemacrawler.config.properties:/opt/schemacrawler/config/schemacrawler.config.properties --entrypoint=/opt/schemacrawler/schemacrawler.sh schemacrawler/schemacrawler --server=postgresql --host=postgres --port=5432 --database=spec --schemas=public --user=dbuser --password=dbpass --info-level=standard --command=schema --portable-names --title "github.com/majodev/go-beer-punk-proxy" --output-format=png --output-file=/home/schcrwlr/share/schema.png
 
 # Generate a pdf (exchange --network="..." with your docker network before executing this command)
-docker run --network=go-starter_default -v $(pwd):/home/schcrwlr/share -v $(pwd)/schemacrawler.config.properties:/opt/schemacrawler/config/schemacrawler.config.properties --entrypoint=/opt/schemacrawler/schemacrawler.sh schemacrawler/schemacrawler --server=postgresql --host=postgres --port=5432 --database=spec --schemas=public --user=dbuser --password=dbpass --info-level=standard --command=schema --portable-names --title "allaboutapps.dev/aw/go-starter" --output-format=pdf --output-file=/home/schcrwlr/share/schema.pdf
+docker run --network=go-beer-punk-proxy_default -v $(pwd):/home/schcrwlr/share -v $(pwd)/schemacrawler.config.properties:/opt/schemacrawler/config/schemacrawler.config.properties --entrypoint=/opt/schemacrawler/schemacrawler.sh schemacrawler/schemacrawler --server=postgresql --host=postgres --port=5432 --database=spec --schemas=public --user=dbuser --password=dbpass --info-level=standard --command=schema --portable-names --title "github.com/majodev/go-beer-punk-proxy" --output-format=pdf --output-file=/home/schcrwlr/share/schema.pdf
 
 # Feel free to override schemacrawler configuration settings in "./schemacrawler.config.properties".
 ```
