@@ -24,7 +24,7 @@ func TestGetBeers(t *testing.T) {
 		var response types.GetBeersResponse
 		test.ParseResponseAndValidate(t, res, &response)
 
-		assert.Len(t, response, 25)
+		require.Len(t, response, 25)
 
 		// default check ordered by id
 		for i, beer := range response {
