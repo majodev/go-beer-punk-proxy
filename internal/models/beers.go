@@ -23,6 +23,8 @@ import (
 	"github.com/volatiletech/strmangle"
 )
 
+// This is a change we never want!
+
 // Beer is an object representing the database table.
 type Beer struct {
 	ID               int               `boil:"id" json:"id" toml:"id" yaml:"id"`
