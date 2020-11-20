@@ -5,7 +5,7 @@ produces:
 - application/json
 swagger: "2.0"
 info:
-  description: API documentation
+  description: Beer Workshop API Documentation
   title: github.com/majodev/go-beer-punk-proxy
   version: 0.1.0
 paths:

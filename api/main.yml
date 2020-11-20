@@ -9,7 +9,7 @@ swagger: "2.0"
 info:
   title: github.com/majodev/go-beer-punk-proxy
   version: 0.1.0
-  description: API documentation
+  description: Beer Workshop API Documentation
 paths: {}
 definitions:
   orderDir:

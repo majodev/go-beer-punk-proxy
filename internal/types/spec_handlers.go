@@ -19,7 +19,7 @@ func NewSwaggerSpec() *SwaggerSpec {
 	return spec
 }
 
-/*SwaggerSpec API documentation */
+/*SwaggerSpec Beer Workshop API Documentation */
 type SwaggerSpec struct {
 	Handlers map[string]map[string]bool
 }
