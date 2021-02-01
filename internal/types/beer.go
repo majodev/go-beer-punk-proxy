@@ -6,6 +6,8 @@ package types
 // Editing this file might prove futile when you re-run the swagger generate command
 
 import (
+	"context"
+
 	"github.com/go-openapi/errors"
 	"github.com/go-openapi/strfmt"
 	"github.com/go-openapi/swag"
@@ -267,7 +269,6 @@ func (m *Beer) validateID(formats strfmt.Registry) error {
 }
 
 func (m *Beer) validateImageURL(formats strfmt.Registry) error {
-
 	if swag.IsZero(m.ImageURL) { // not required
 		return nil
 	}
@@ -359,6 +360,88 @@ func (m *Beer) validateVolume(formats strfmt.Registry) error {
 
 	if m.Volume != nil {
 		if err := m.Volume.Validate(formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("volume")
+			}
+			return err
+		}
+	}
+
+	return nil
+}
+
+// ContextValidate validate this beer based on the context it is used
+func (m *Beer) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
+	var res []error
+
+	if err := m.contextValidateBoilVolume(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.contextValidateIngredients(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.contextValidateMethod(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.contextValidateVolume(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
+	if len(res) > 0 {
+		return errors.CompositeValidationError(res...)
+	}
+	return nil
+}
+
+func (m *Beer) contextValidateBoilVolume(ctx context.Context, formats strfmt.Registry) error {
+
+	if m.BoilVolume != nil {
+		if err := m.BoilVolume.ContextValidate(ctx, formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("boil_volume")
+			}
+			return err
+		}
+	}
+
+	return nil
+}
+
+func (m *Beer) contextValidateIngredients(ctx context.Context, formats strfmt.Registry) error {
+
+	if m.Ingredients != nil {
+		if err := m.Ingredients.ContextValidate(ctx, formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("ingredients")
+			}
+			return err
+		}
+	}
+
+	return nil
+}
+
+func (m *Beer) contextValidateMethod(ctx context.Context, formats strfmt.Registry) error {
+
+	if m.Method != nil {
+		if err := m.Method.ContextValidate(ctx, formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("method")
+			}
+			return err
+		}
+	}
+
+	return nil
+}
+
+func (m *Beer) contextValidateVolume(ctx context.Context, formats strfmt.Registry) error {
+
+	if m.Volume != nil {
+		if err := m.Volume.ContextValidate(ctx, formats); err != nil {
 			if ve, ok := err.(*errors.Validation); ok {
 				return ve.ValidateName("volume")
 			}

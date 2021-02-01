@@ -386,7 +386,7 @@ func (o *GetBeersRouteParams) validatePage(formats strfmt.Registry) error {
 		return nil
 	}
 
-	if err := validate.MinimumInt("page", "query", int64(*o.Page), 1, false); err != nil {
+	if err := validate.MinimumInt("page", "query", *o.Page, 1, false); err != nil {
 		return err
 	}
 
@@ -428,11 +428,11 @@ func (o *GetBeersRouteParams) validatePerPage(formats strfmt.Registry) error {
 		return nil
 	}
 
-	if err := validate.MinimumInt("per_page", "query", int64(*o.PerPage), 1, false); err != nil {
+	if err := validate.MinimumInt("per_page", "query", *o.PerPage, 1, false); err != nil {
 		return err
 	}
 
-	if err := validate.MaximumInt("per_page", "query", int64(*o.PerPage), 80, false); err != nil {
+	if err := validate.MaximumInt("per_page", "query", *o.PerPage, 80, false); err != nil {
 		return err
 	}
 

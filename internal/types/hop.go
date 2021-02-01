@@ -6,6 +6,8 @@ package types
 // Editing this file might prove futile when you re-run the swagger generate command
 
 import (
+	"context"
+
 	"github.com/go-openapi/errors"
 	"github.com/go-openapi/strfmt"
 	"github.com/go-openapi/swag"
@@ -19,7 +21,7 @@ type Hop struct {
 
 	// add
 	// Required: true
-	Add Add `json:"add"`
+	Add *Add `json:"add"`
 
 	// amount
 	// Required: true
@@ -27,7 +29,7 @@ type Hop struct {
 
 	// attribute
 	// Required: true
-	Attribute Attribute `json:"attribute"`
+	Attribute *Attribute `json:"attribute"`
 
 	// name
 	// Required: true
@@ -62,11 +64,21 @@ func (m *Hop) Validate(formats strfmt.Registry) error {
 
 func (m *Hop) validateAdd(formats strfmt.Registry) error {
 
-	if err := m.Add.Validate(formats); err != nil {
-		if ve, ok := err.(*errors.Validation); ok {
-			return ve.ValidateName("add")
-		}
+	if err := validate.Required("add", "body", m.Add); err != nil {
 		return err
+	}
+
+	if err := validate.Required("add", "body", m.Add); err != nil {
+		return err
+	}
+
+	if m.Add != nil {
+		if err := m.Add.Validate(formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("add")
+			}
+			return err
+		}
 	}
 
 	return nil
@@ -92,11 +104,21 @@ func (m *Hop) validateAmount(formats strfmt.Registry) error {
 
 func (m *Hop) validateAttribute(formats strfmt.Registry) error {
 
-	if err := m.Attribute.Validate(formats); err != nil {
-		if ve, ok := err.(*errors.Validation); ok {
-			return ve.ValidateName("attribute")
-		}
+	if err := validate.Required("attribute", "body", m.Attribute); err != nil {
 		return err
+	}
+
+	if err := validate.Required("attribute", "body", m.Attribute); err != nil {
+		return err
+	}
+
+	if m.Attribute != nil {
+		if err := m.Attribute.Validate(formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("attribute")
+			}
+			return err
+		}
 	}
 
 	return nil
@@ -106,6 +128,70 @@ func (m *Hop) validateName(formats strfmt.Registry) error {
 
 	if err := validate.Required("name", "body", m.Name); err != nil {
 		return err
+	}
+
+	return nil
+}
+
+// ContextValidate validate this hop based on the context it is used
+func (m *Hop) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
+	var res []error
+
+	if err := m.contextValidateAdd(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.contextValidateAmount(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.contextValidateAttribute(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
+	if len(res) > 0 {
+		return errors.CompositeValidationError(res...)
+	}
+	return nil
+}
+
+func (m *Hop) contextValidateAdd(ctx context.Context, formats strfmt.Registry) error {
+
+	if m.Add != nil {
+		if err := m.Add.ContextValidate(ctx, formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("add")
+			}
+			return err
+		}
+	}
+
+	return nil
+}
+
+func (m *Hop) contextValidateAmount(ctx context.Context, formats strfmt.Registry) error {
+
+	if m.Amount != nil {
+		if err := m.Amount.ContextValidate(ctx, formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("amount")
+			}
+			return err
+		}
+	}
+
+	return nil
+}
+
+func (m *Hop) contextValidateAttribute(ctx context.Context, formats strfmt.Registry) error {
+
+	if m.Attribute != nil {
+		if err := m.Attribute.ContextValidate(ctx, formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("attribute")
+			}
+			return err
+		}
 	}
 
 	return nil

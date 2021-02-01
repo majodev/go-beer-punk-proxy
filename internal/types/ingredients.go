@@ -6,6 +6,7 @@ package types
 // Editing this file might prove futile when you re-run the swagger generate command
 
 import (
+	"context"
 	"strconv"
 
 	"github.com/go-openapi/errors"
@@ -87,6 +88,60 @@ func (m *Ingredients) validateMalt(formats strfmt.Registry) error {
 
 		if m.Malt[i] != nil {
 			if err := m.Malt[i].Validate(formats); err != nil {
+				if ve, ok := err.(*errors.Validation); ok {
+					return ve.ValidateName("malt" + "." + strconv.Itoa(i))
+				}
+				return err
+			}
+		}
+
+	}
+
+	return nil
+}
+
+// ContextValidate validate this ingredients based on the context it is used
+func (m *Ingredients) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
+	var res []error
+
+	if err := m.contextValidateHops(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.contextValidateMalt(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
+	if len(res) > 0 {
+		return errors.CompositeValidationError(res...)
+	}
+	return nil
+}
+
+func (m *Ingredients) contextValidateHops(ctx context.Context, formats strfmt.Registry) error {
+
+	for i := 0; i < len(m.Hops); i++ {
+
+		if m.Hops[i] != nil {
+			if err := m.Hops[i].ContextValidate(ctx, formats); err != nil {
+				if ve, ok := err.(*errors.Validation); ok {
+					return ve.ValidateName("hops" + "." + strconv.Itoa(i))
+				}
+				return err
+			}
+		}
+
+	}
+
+	return nil
+}
+
+func (m *Ingredients) contextValidateMalt(ctx context.Context, formats strfmt.Registry) error {
+
+	for i := 0; i < len(m.Malt); i++ {
+
+		if m.Malt[i] != nil {
+			if err := m.Malt[i].ContextValidate(ctx, formats); err != nil {
 				if ve, ok := err.(*errors.Validation); ok {
 					return ve.ValidateName("malt" + "." + strconv.Itoa(i))
 				}

@@ -314,7 +314,9 @@ paths:
         in: query
       - type: string
         x-nullable: true
-        description: Returns all beers matching the supplied name (this will match partial strings as well so e.g punk will return Punk IPA), if you need to add spaces just add an underscore (_).
+        description: Returns all beers matching the supplied name (this will match
+          partial strings as well so e.g punk will return Punk IPA), if you need to
+          add spaces just add an underscore (_).
         name: beer_name
         in: query
       responses:
@@ -788,7 +790,8 @@ definitions:
         x-nullable: true
         example: 495179de-b771-48f0-aab2-8d23701b0f02
       provider:
-        description: Identifier of the provider the token is for (eg. "fcm", "apn"). Currently only "fcm" is supported.
+        description: Identifier of the provider the token is for (eg. "fcm", "apn").
+          Currently only "fcm" is supported.
         type: string
         maxLength: 500
         example: fcm
@@ -816,7 +819,8 @@ definitions:
         type: string
         example: Forbidden
       type:
-        description: Type of error returned, should be used for client-side error handling
+        description: Type of error returned, should be used for client-side error
+          handling
         type: string
         example: generic
   publicHttpValidationError:
@@ -853,11 +857,16 @@ responses:
       $ref: '#/definitions/publicHttpValidationError'
 securityDefinitions:
   Bearer:
+    description: |-
+      Access token for application access, **must** include "Bearer " prefix.
+      Example: `Bearer b4a94a42-3ea2-4af3-9699-8bcbfee6e6d2`
     type: apiKey
     name: Authorization
     in: header
     x-keyPrefix: 'Bearer '
   Management:
+    description: Management secret, used for monitoring and infrastructure related
+      calls
     type: apiKey
     name: mgmt-secret
     in: query

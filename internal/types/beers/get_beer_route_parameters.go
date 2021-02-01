@@ -102,7 +102,7 @@ func (o *GetBeerRouteParams) bindID(rawData []string, hasKey bool, formats strfm
 // validateID carries on validations for parameter ID
 func (o *GetBeerRouteParams) validateID(formats strfmt.Registry) error {
 
-	if err := validate.MinimumInt("id", "path", int64(o.ID), 1, false); err != nil {
+	if err := validate.MinimumInt("id", "path", o.ID, 1, false); err != nil {
 		return err
 	}
 

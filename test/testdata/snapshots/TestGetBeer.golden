@@ -3,7 +3,7 @@
     Abv: (*float64)(4.2),
     AttenuationLevel: (*float64)(76.2),
     BoilVolume: (*types.BoilVolume)({
-      Unit: (types.Unit) (len=6) "litres",
+      Unit: (*types.Unit)((len=6) "litres"),
       Value: (float64) 25
     }),
     BrewersTips: (*string)((len=51) "Add the rye and wheat malt evenly through the mash."),
@@ -22,101 +22,101 @@
     Ingredients: (*types.Ingredients)({
       Hops: ([]*types.Hop) (len=7) {
         (*types.Hop)({
-          Add: (types.Add) (len=5) "start",
+          Add: (*types.Add)((len=5) "start"),
           Amount: (*types.BoilVolume)({
-            Unit: (types.Unit) (len=5) "grams",
+            Unit: (*types.Unit)((len=5) "grams"),
             Value: (float64) 2.5
           }),
-          Attribute: (types.Attribute) (len=6) "bitter",
+          Attribute: (*types.Attribute)((len=6) "bitter"),
           Name: (*string)((len=10) "Centennial")
         }),
         (*types.Hop)({
-          Add: (types.Add) (len=5) "start",
+          Add: (*types.Add)((len=5) "start"),
           Amount: (*types.BoilVolume)({
-            Unit: (types.Unit) (len=5) "grams",
+            Unit: (*types.Unit)((len=5) "grams"),
             Value: (float64) 2.5
           }),
-          Attribute: (types.Attribute) (len=6) "bitter",
+          Attribute: (*types.Attribute)((len=6) "bitter"),
           Name: (*string)((len=8) "Amarillo")
         }),
         (*types.Hop)({
-          Add: (types.Add) (len=6) "middle",
+          Add: (*types.Add)((len=6) "middle"),
           Amount: (*types.BoilVolume)({
-            Unit: (types.Unit) (len=5) "grams",
+            Unit: (*types.Unit)((len=5) "grams"),
             Value: (float64) 12.5
           }),
-          Attribute: (types.Attribute) (len=7) "flavour",
+          Attribute: (*types.Attribute)((len=7) "flavour"),
           Name: (*string)((len=10) "Centennial")
         }),
         (*types.Hop)({
-          Add: (types.Add) (len=6) "middle",
+          Add: (*types.Add)((len=6) "middle"),
           Amount: (*types.BoilVolume)({
-            Unit: (types.Unit) (len=5) "grams",
+            Unit: (*types.Unit)((len=5) "grams"),
             Value: (float64) 12.5
           }),
-          Attribute: (types.Attribute) (len=7) "flavour",
+          Attribute: (*types.Attribute)((len=7) "flavour"),
           Name: (*string)((len=8) "Amarillo")
         }),
         (*types.Hop)({
-          Add: (types.Add) (len=3) "end",
+          Add: (*types.Add)((len=3) "end"),
           Amount: (*types.BoilVolume)({
-            Unit: (types.Unit) (len=5) "grams",
+            Unit: (*types.Unit)((len=5) "grams"),
             Value: (float64) 25
           }),
-          Attribute: (types.Attribute) (len=7) "flavour",
+          Attribute: (*types.Attribute)((len=7) "flavour"),
           Name: (*string)((len=10) "Centennial")
         }),
         (*types.Hop)({
-          Add: (types.Add) (len=7) "dry hop",
+          Add: (*types.Add)((len=7) "dry hop"),
           Amount: (*types.BoilVolume)({
-            Unit: (types.Unit) (len=5) "grams",
+            Unit: (*types.Unit)((len=5) "grams"),
             Value: (float64) 150
           }),
-          Attribute: (types.Attribute) (len=5) "aroma",
+          Attribute: (*types.Attribute)((len=5) "aroma"),
           Name: (*string)((len=8) "Amarillo")
         }),
         (*types.Hop)({
-          Add: (types.Add) (len=7) "dry hop",
+          Add: (*types.Add)((len=7) "dry hop"),
           Amount: (*types.BoilVolume)({
-            Unit: (types.Unit) (len=5) "grams",
+            Unit: (*types.Unit)((len=5) "grams"),
             Value: (float64) 125
           }),
-          Attribute: (types.Attribute) (len=5) "aroma",
+          Attribute: (*types.Attribute)((len=5) "aroma"),
           Name: (*string)((len=10) "Centennial")
         })
       },
       Malt: ([]*types.Malt) (len=5) {
         (*types.Malt)({
           Amount: (*types.BoilVolume)({
-            Unit: (types.Unit) (len=9) "kilograms",
+            Unit: (*types.Unit)((len=9) "kilograms"),
             Value: (float64) 2.06
           }),
           Name: (*string)((len=10) "Extra Pale")
         }),
         (*types.Malt)({
           Amount: (*types.BoilVolume)({
-            Unit: (types.Unit) (len=9) "kilograms",
+            Unit: (*types.Unit)((len=9) "kilograms"),
             Value: (float64) 0.63
           }),
           Name: (*string)((len=8) "Caramalt")
         }),
         (*types.Malt)({
           Amount: (*types.BoilVolume)({
-            Unit: (types.Unit) (len=9) "kilograms",
+            Unit: (*types.Unit)((len=9) "kilograms"),
             Value: (float64) 0.25
           }),
           Name: (*string)((len=11) "Crystal 150")
         }),
         (*types.Malt)({
           Amount: (*types.BoilVolume)({
-            Unit: (types.Unit) (len=9) "kilograms",
+            Unit: (*types.Unit)((len=9) "kilograms"),
             Value: (float64) 0.5
           }),
           Name: (*string)((len=5) "Wheat")
         }),
         (*types.Malt)({
           Amount: (*types.BoilVolume)({
-            Unit: (types.Unit) (len=9) "kilograms",
+            Unit: (*types.Unit)((len=9) "kilograms"),
             Value: (float64) 0.19
           }),
           Name: (*string)((len=3) "Rye")
@@ -127,7 +127,7 @@
     Method: (*types.Method)({
       Fermentation: (*types.Fermentation)({
         Temp: (*types.BoilVolume)({
-          Unit: (types.Unit) (len=7) "celsius",
+          Unit: (*types.Unit)((len=7) "celsius"),
           Value: (float64) 19
         })
       }),
@@ -135,7 +135,7 @@
         (*types.MashTemp)({
           Duration: (float64) 75,
           Temp: (*types.BoilVolume)({
-            Unit: (types.Unit) (len=7) "celsius",
+            Unit: (*types.Unit)((len=7) "celsius"),
             Value: (float64) 65
           })
         })
@@ -149,7 +149,7 @@
     TargetFg: (*int64)(1010),
     TargetOg: (*float64)(1042),
     Volume: (*types.BoilVolume)({
-      Unit: (types.Unit) (len=6) "litres",
+      Unit: (*types.Unit)((len=6) "litres"),
       Value: (float64) 20
     })
   })

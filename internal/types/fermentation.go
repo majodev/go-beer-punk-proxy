@@ -6,6 +6,8 @@ package types
 // Editing this file might prove futile when you re-run the swagger generate command
 
 import (
+	"context"
+
 	"github.com/go-openapi/errors"
 	"github.com/go-openapi/strfmt"
 	"github.com/go-openapi/swag"
@@ -44,6 +46,34 @@ func (m *Fermentation) validateTemp(formats strfmt.Registry) error {
 
 	if m.Temp != nil {
 		if err := m.Temp.Validate(formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("temp")
+			}
+			return err
+		}
+	}
+
+	return nil
+}
+
+// ContextValidate validate this fermentation based on the context it is used
+func (m *Fermentation) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
+	var res []error
+
+	if err := m.contextValidateTemp(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
+	if len(res) > 0 {
+		return errors.CompositeValidationError(res...)
+	}
+	return nil
+}
+
+func (m *Fermentation) contextValidateTemp(ctx context.Context, formats strfmt.Registry) error {
+
+	if m.Temp != nil {
+		if err := m.Temp.ContextValidate(ctx, formats); err != nil {
 			if ve, ok := err.(*errors.Validation); ok {
 				return ve.ValidateName("temp")
 			}
