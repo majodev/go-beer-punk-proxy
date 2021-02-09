@@ -4,7 +4,7 @@
 # --- https://hub.docker.com/_/golang
 # --- https://github.com/microsoft/vscode-remote-try-go/blob/master/.devcontainer/Dockerfile
 ### -----------------------
-FROM golang:1.15.7 AS development
+FROM golang:1.15.8 AS development
 
 # Avoid warnings by switching to noninteractive
 ENV DEBIAN_FRONTEND=noninteractive
@@ -103,7 +103,7 @@ RUN curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/i
 # go swagger: (this package should NOT be installed via go get) 
 # https://github.com/go-swagger/go-swagger/releases
 RUN curl -o /usr/local/bin/swagger -L'#' \
-    "https://github.com/go-swagger/go-swagger/releases/download/v0.26.0/swagger_linux_amd64" \
+    "https://github.com/go-swagger/go-swagger/releases/download/v0.26.1/swagger_linux_amd64" \
     && chmod +x /usr/local/bin/swagger
 
 # golicense: (this package should NOT be installed via go get) 
