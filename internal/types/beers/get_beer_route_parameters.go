@@ -36,7 +36,7 @@ type GetBeerRouteParams struct {
 	  Minimum: 1
 	  In: path
 	*/
-	ID int64
+	ID int64 `param:"id"`
 }
 
 // BindRequest both binds and validates a request, it assumes that complex things implement a Validatable(strfmt.Registry) error interface
