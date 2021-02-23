@@ -31,3 +31,41 @@ func TestGetBeer(t *testing.T) {
 		test.Snapshoter.Save(t, response)
 	})
 }
+
+func TestGetNonFoundBeer(t *testing.T) {
+
+	t.Parallel()
+
+	test.WithTestServer(t, func(s *api.Server) {
+		fixtures := test.Fixtures()
+
+		res := test.PerformRequest(t, s, "GET", "/api/v1/beers/1000", nil, test.HeadersWithAuth(t, fixtures.User1AccessToken1.Token))
+		require.Equal(t, http.StatusNotFound, res.Result().StatusCode)
+
+		var response types.PublicHTTPError
+		test.ParseResponseAndValidate(t, res, &response)
+
+		test.Snapshoter.Save(t, response)
+	})
+
+}
+
+// Only here to showcase that an inaccessable database will result in a 500
+// We won't actually hit the get_beers controller, as the authorization middleware will kick in before (try debugging)
+func TestGetBeerWhileDBInaccessable(t *testing.T) {
+	t.Parallel()
+
+	test.WithTestServer(t, func(s *api.Server) {
+		fixtures := test.Fixtures()
+
+		s.DB.Close() // forcefully close the database!
+
+		res := test.PerformRequest(t, s, "GET", "/api/v1/beers/1000", nil, test.HeadersWithAuth(t, fixtures.User1AccessToken1.Token))
+		require.Equal(t, http.StatusInternalServerError, res.Result().StatusCode)
+
+		var response types.PublicHTTPError
+		test.ParseResponseAndValidate(t, res, &response)
+
+		test.Snapshoter.Save(t, response)
+	})
+}

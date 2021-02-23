@@ -363,6 +363,10 @@ paths:
           description: GetBeersResponse
           schema:
             $ref: '#/definitions/getBeersResponse'
+        "404":
+          description: PublicHTTPError, type `BEER_NOT_FOUND`
+          schema:
+            $ref: '#/definitions/publicHttpError'
   /api/v1/push/test:
     get:
       security:

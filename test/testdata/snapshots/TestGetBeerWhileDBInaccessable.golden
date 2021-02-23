@@ -1,0 +1,6 @@
+(types.PublicHTTPError) {
+  Code: (*int64)(500),
+  Detail: (string) "",
+  Title: (*string)((len=21) "Internal Server Error"),
+  Type: (*string)((len=7) "generic")
+}

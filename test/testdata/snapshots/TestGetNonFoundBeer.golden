@@ -1,0 +1,6 @@
+(types.PublicHTTPError) {
+  Code: (*int64)(404),
+  Detail: (string) "",
+  Title: (*string)((len=38) "No beer found that matches the ID 1000"),
+  Type: (*string)((len=14) "BEER_NOT_FOUND")
+}

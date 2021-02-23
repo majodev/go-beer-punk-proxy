@@ -1,0 +1,505 @@
+(types.GetBeersResponse) (len=4) {
+  (*types.Beer)({
+    Abv: (*float64)(4.2),
+    AttenuationLevel: (*float64)(76.2),
+    BoilVolume: (*types.BoilVolume)({
+      Unit: (*types.Unit)((len=6) "litres"),
+      Value: (float64) 25
+    }),
+    BrewersTips: (*string)((len=51) "Add the rye and wheat malt evenly through the mash."),
+    ContributedBy: (*string)((len=24) "Ali Skinner <AliSkinner>"),
+    Description: (*string)((len=308) "Brewed with mountains of Wheat, Rye, Cara and Crystal malts, fermented with an American ale yeast and bittered with Amarillo & Centennial, this 4.2% beer is what happens if something classy like a European wheat beer goes to live in Vegas. Zingy citrus hops and a punchy bitterness bolster this low ABV pale."),
+    Ebc: (float64) 30,
+    FirstBrewed: (*string)((len=7) "11/2013"),
+    FoodPairing: ([]string) (len=3) {
+      (string) (len=35) "Mozzarella and tomato baked chicken",
+      (string) (len=19) "Spiced shrimp salad",
+      (string) (len=20) "Strawberry cheescake"
+    },
+    Ibu: (float64) 50,
+    ID: (*int64)(77),
+    ImageURL: (strfmt.URI) (len=36) https://images.punkapi.com/v2/77.png,
+    Ingredients: (*types.Ingredients)({
+      Hops: ([]*types.Hop) (len=7) {
+        (*types.Hop)({
+          Add: (*types.Add)((len=5) "start"),
+          Amount: (*types.BoilVolume)({
+            Unit: (*types.Unit)((len=5) "grams"),
+            Value: (float64) 2.5
+          }),
+          Attribute: (*types.Attribute)((len=6) "bitter"),
+          Name: (*string)((len=10) "Centennial")
+        }),
+        (*types.Hop)({
+          Add: (*types.Add)((len=5) "start"),
+          Amount: (*types.BoilVolume)({
+            Unit: (*types.Unit)((len=5) "grams"),
+            Value: (float64) 2.5
+          }),
+          Attribute: (*types.Attribute)((len=6) "bitter"),
+          Name: (*string)((len=8) "Amarillo")
+        }),
+        (*types.Hop)({
+          Add: (*types.Add)((len=6) "middle"),
+          Amount: (*types.BoilVolume)({
+            Unit: (*types.Unit)((len=5) "grams"),
+            Value: (float64) 12.5
+          }),
+          Attribute: (*types.Attribute)((len=7) "flavour"),
+          Name: (*string)((len=10) "Centennial")
+        }),
+        (*types.Hop)({
+          Add: (*types.Add)((len=6) "middle"),
+          Amount: (*types.BoilVolume)({
+            Unit: (*types.Unit)((len=5) "grams"),
+            Value: (float64) 12.5
+          }),
+          Attribute: (*types.Attribute)((len=7) "flavour"),
+          Name: (*string)((len=8) "Amarillo")
+        }),
+        (*types.Hop)({
+          Add: (*types.Add)((len=3) "end"),
+          Amount: (*types.BoilVolume)({
+            Unit: (*types.Unit)((len=5) "grams"),
+            Value: (float64) 25
+          }),
+          Attribute: (*types.Attribute)((len=7) "flavour"),
+          Name: (*string)((len=10) "Centennial")
+        }),
+        (*types.Hop)({
+          Add: (*types.Add)((len=7) "dry hop"),
+          Amount: (*types.BoilVolume)({
+            Unit: (*types.Unit)((len=5) "grams"),
+            Value: (float64) 150
+          }),
+          Attribute: (*types.Attribute)((len=5) "aroma"),
+          Name: (*string)((len=8) "Amarillo")
+        }),
+        (*types.Hop)({
+          Add: (*types.Add)((len=7) "dry hop"),
+          Amount: (*types.BoilVolume)({
+            Unit: (*types.Unit)((len=5) "grams"),
+            Value: (float64) 125
+          }),
+          Attribute: (*types.Attribute)((len=5) "aroma"),
+          Name: (*string)((len=10) "Centennial")
+        })
+      },
+      Malt: ([]*types.Malt) (len=5) {
+        (*types.Malt)({
+          Amount: (*types.BoilVolume)({
+            Unit: (*types.Unit)((len=9) "kilograms"),
+            Value: (float64) 2.06
+          }),
+          Name: (*string)((len=10) "Extra Pale")
+        }),
+        (*types.Malt)({
+          Amount: (*types.BoilVolume)({
+            Unit: (*types.Unit)((len=9) "kilograms"),
+            Value: (float64) 0.63
+          }),
+          Name: (*string)((len=8) "Caramalt")
+        }),
+        (*types.Malt)({
+          Amount: (*types.BoilVolume)({
+            Unit: (*types.Unit)((len=9) "kilograms"),
+            Value: (float64) 0.25
+          }),
+          Name: (*string)((len=11) "Crystal 150")
+        }),
+        (*types.Malt)({
+          Amount: (*types.BoilVolume)({
+            Unit: (*types.Unit)((len=9) "kilograms"),
+            Value: (float64) 0.5
+          }),
+          Name: (*string)((len=5) "Wheat")
+        }),
+        (*types.Malt)({
+          Amount: (*types.BoilVolume)({
+            Unit: (*types.Unit)((len=9) "kilograms"),
+            Value: (float64) 0.19
+          }),
+          Name: (*string)((len=3) "Rye")
+        })
+      },
+      Yeast: (string) (len=29) "Wyeast 1056 - American Ale™"
+    }),
+    Method: (*types.Method)({
+      Fermentation: (*types.Fermentation)({
+        Temp: (*types.BoilVolume)({
+          Unit: (*types.Unit)((len=7) "celsius"),
+          Value: (float64) 19
+        })
+      }),
+      MashTemp: ([]*types.MashTemp) (len=1) {
+        (*types.MashTemp)({
+          Duration: (float64) 75,
+          Temp: (*types.BoilVolume)({
+            Unit: (*types.Unit)((len=7) "celsius"),
+            Value: (float64) 65
+          })
+        })
+      },
+      Twist: (interface {}) <nil>
+    }),
+    Name: (*string)((len=8) "Hobo Pop"),
+    Ph: (float64) 4.4,
+    Srm: (float64) 15,
+    Tagline: (*string)((len=28) "2013 Prototype Rye Pale Ale."),
+    TargetFg: (*int64)(1010),
+    TargetOg: (*float64)(1042),
+    Volume: (*types.BoilVolume)({
+      Unit: (*types.Unit)((len=6) "litres"),
+      Value: (float64) 20
+    })
+  }),
+  (*types.Beer)({
+    Abv: (*float64)(4.5),
+    AttenuationLevel: (*float64)(75.6),
+    BoilVolume: (*types.BoilVolume)({
+      Unit: (*types.Unit)((len=6) "litres"),
+      Value: (float64) 25
+    }),
+    BrewersTips: (*string)((len=87) "Columbus and Ahtanum hop additions create a perfect blend of resin and lemon character."),
+    ContributedBy: (*string)((len=22) "Sam Mason <samjbmason>"),
+    Description: (*string)((len=416) "A hoppy Rye Ale loaded with an avalanche of citrus and resinous flavours. Columbus, our high-alpha friend, lends a huge pithy citrus blast, with Ahtanum providing a punchy tropical fruit back-up. Brewing with rye adds a spiciness to the speciality malt caramel backbone, giving a warm ginger snap flavour, before slowly the hops, barley and rye combine and build to an orangey, biscuity, almost chocolatey crescendo."),
+    Ebc: (float64) 25,
+    FirstBrewed: (*string)((len=7) "03/2014"),
+    FoodPairing: ([]string) (len=3) {
+      (string) (len=23) "Spicy lamb tikka masala",
+      (string) (len=40) "Spicy beef and Mexican black bean burger",
+      (string) (len=30) "Poached cinnamon apple muffins"
+    },
+    Ibu: (float64) 30,
+    ID: (*int64)(87),
+    ImageURL: (strfmt.URI) (len=36) https://images.punkapi.com/v2/87.png,
+    Ingredients: (*types.Ingredients)({
+      Hops: ([]*types.Hop) (len=6) {
+        (*types.Hop)({
+          Add: (*types.Add)((len=5) "start"),
+          Amount: (*types.BoilVolume)({
+            Unit: (*types.Unit)((len=5) "grams"),
+            Value: (float64) 5
+          }),
+          Attribute: (*types.Attribute)((len=6) "bitter"),
+          Name: (*string)((len=8) "Columbus")
+        }),
+        (*types.Hop)({
+          Add: (*types.Add)((len=6) "middle"),
+          Amount: (*types.BoilVolume)({
+            Unit: (*types.Unit)((len=5) "grams"),
+            Value: (float64) 7.5
+          }),
+          Attribute: (*types.Attribute)((len=7) "flavour"),
+          Name: (*string)((len=8) "Columbus")
+        }),
+        (*types.Hop)({
+          Add: (*types.Add)((len=6) "middle"),
+          Amount: (*types.BoilVolume)({
+            Unit: (*types.Unit)((len=5) "grams"),
+            Value: (float64) 12.5
+          }),
+          Attribute: (*types.Attribute)((len=7) "flavour"),
+          Name: (*string)((len=7) "Ahtanum")
+        }),
+        (*types.Hop)({
+          Add: (*types.Add)((len=3) "end"),
+          Amount: (*types.BoilVolume)({
+            Unit: (*types.Unit)((len=5) "grams"),
+            Value: (float64) 37.5
+          }),
+          Attribute: (*types.Attribute)((len=7) "flavour"),
+          Name: (*string)((len=7) "Ahtanum")
+        }),
+        (*types.Hop)({
+          Add: (*types.Add)((len=7) "dry hop"),
+          Amount: (*types.BoilVolume)({
+            Unit: (*types.Unit)((len=5) "grams"),
+            Value: (float64) 125
+          }),
+          Attribute: (*types.Attribute)((len=5) "aroma"),
+          Name: (*string)((len=7) "Ahtanum")
+        }),
+        (*types.Hop)({
+          Add: (*types.Add)((len=7) "dry hop"),
+          Amount: (*types.BoilVolume)({
+            Unit: (*types.Unit)((len=5) "grams"),
+            Value: (float64) 125
+          }),
+          Attribute: (*types.Attribute)((len=5) "aroma"),
+          Name: (*string)((len=8) "Columbus")
+        })
+      },
+      Malt: ([]*types.Malt) (len=4) {
+        (*types.Malt)({
+          Amount: (*types.BoilVolume)({
+            Unit: (*types.Unit)((len=9) "kilograms"),
+            Value: (float64) 3.69
+          }),
+          Name: (*string)((len=10) "Extra Pale")
+        }),
+        (*types.Malt)({
+          Amount: (*types.BoilVolume)({
+            Unit: (*types.Unit)((len=9) "kilograms"),
+            Value: (float64) 0.16
+          }),
+          Name: (*string)((len=8) "Caramalt")
+        }),
+        (*types.Malt)({
+          Amount: (*types.BoilVolume)({
+            Unit: (*types.Unit)((len=9) "kilograms"),
+            Value: (float64) 0.06
+          }),
+          Name: (*string)((len=12) "Dark Crystal")
+        }),
+        (*types.Malt)({
+          Amount: (*types.BoilVolume)({
+            Unit: (*types.Unit)((len=9) "kilograms"),
+            Value: (float64) 0.31
+          }),
+          Name: (*string)((len=3) "Rye")
+        })
+      },
+      Yeast: (string) (len=29) "Wyeast 1056 - American Ale™"
+    }),
+    Method: (*types.Method)({
+      Fermentation: (*types.Fermentation)({
+        Temp: (*types.BoilVolume)({
+          Unit: (*types.Unit)((len=7) "celsius"),
+          Value: (float64) 19
+        })
+      }),
+      MashTemp: ([]*types.MashTemp) (len=1) {
+        (*types.MashTemp)({
+          Duration: (interface {}) <nil>,
+          Temp: (*types.BoilVolume)({
+            Unit: (*types.Unit)((len=7) "celsius"),
+            Value: (float64) 65
+          })
+        })
+      },
+      Twist: (interface {}) <nil>
+    }),
+    Name: (*string)((len=9) "Alpha Pop"),
+    Ph: (float64) 4.4,
+    Srm: (float64) 12.5,
+    Tagline: (*string)((len=19) "Hoppy Rye Pale Ale."),
+    TargetFg: (*int64)(1011),
+    TargetOg: (*float64)(1045),
+    Volume: (*types.BoilVolume)({
+      Unit: (*types.Unit)((len=6) "litres"),
+      Value: (float64) 20
+    })
+  }),
+  (*types.Beer)({
+    Abv: (*float64)(7.4),
+    AttenuationLevel: (*float64)(82),
+    BoilVolume: (*types.BoilVolume)({
+      Unit: (*types.Unit)((len=6) "litres"),
+      Value: (float64) 25
+    }),
+    BrewersTips: (*string)((len=225) "Don't be shy with the roasted coconut, it's a delicate flavour compared to the rest of the beer, so go nuts! If it grows wild near you, go grab some Gorse and chuck it in too for a local natural boost to the coconut flavours."),
+    ContributedBy: (*string)((len=26) "John Jenkman <johnjenkman>"),
+    Description: (*string)((len=61) "A dark and decadent beer brewed with coconut, vanilla, cacao."),
+    Ebc: (float64) 200,
+    FirstBrewed: (*string)((len=7) "01/2016"),
+    FoodPairing: ([]string) (len=3) {
+      (string) (len=12) "Beef Rendang",
+      (string) (len=17) "Coconut Macaroons",
+      (string) (len=33) "Profiteroles with Chantilly Cream"
+    },
+    Ibu: (float64) 75,
+    ID: (*int64)(247),
+    ImageURL: (strfmt.URI) ,
+    Ingredients: (*types.Ingredients)({
+      Hops: ([]*types.Hop) (len=2) {
+        (*types.Hop)({
+          Add: (*types.Add)((len=5) "Start"),
+          Amount: (*types.BoilVolume)({
+            Unit: (*types.Unit)((len=5) "grams"),
+            Value: (float64) 30
+          }),
+          Attribute: (*types.Attribute)((len=6) "Bitter"),
+          Name: (*string)((len=6) "Galena")
+        }),
+        (*types.Hop)({
+          Add: (*types.Add)((len=9) "Additions"),
+          Amount: (*types.BoilVolume)({
+            Unit: (*types.Unit)((len=5) "grams"),
+            Value: (float64) 400
+          }),
+          Attribute: (*types.Attribute)((len=7) "Flavour"),
+          Name: (*string)((len=14) "Dark Muscavado")
+        })
+      },
+      Malt: ([]*types.Malt) (len=5) {
+        (*types.Malt)({
+          Amount: (*types.BoilVolume)({
+            Unit: (*types.Unit)((len=9) "kilograms"),
+            Value: (float64) 3.6
+          }),
+          Name: (*string)((len=8) "Pale Ale")
+        }),
+        (*types.Malt)({
+          Amount: (*types.BoilVolume)({
+            Unit: (*types.Unit)((len=9) "kilograms"),
+            Value: (float64) 0.2
+          }),
+          Name: (*string)((len=5) "Wheat")
+        }),
+        (*types.Malt)({
+          Amount: (*types.BoilVolume)({
+            Unit: (*types.Unit)((len=9) "kilograms"),
+            Value: (float64) 0.2
+          }),
+          Name: (*string)((len=12) "Dextrin Malt")
+        }),
+        (*types.Malt)({
+          Amount: (*types.BoilVolume)({
+            Unit: (*types.Unit)((len=9) "kilograms"),
+            Value: (float64) 0.35
+          }),
+          Name: (*string)((len=9) "Chocolate")
+        }),
+        (*types.Malt)({
+          Amount: (*types.BoilVolume)({
+            Unit: (*types.Unit)((len=9) "kilograms"),
+            Value: (float64) 0.3
+          }),
+          Name: (*string)((len=22) "Double Roasted Crystal")
+        })
+      },
+      Yeast: (string) (len=32) "Wyeast 1272 - American Ale II™"
+    }),
+    Method: (*types.Method)({
+      Fermentation: (*types.Fermentation)({
+        Temp: (*types.BoilVolume)({
+          Unit: (*types.Unit)((len=7) "celsius"),
+          Value: (float64) 19
+        })
+      }),
+      MashTemp: ([]*types.MashTemp) (len=1) {
+        (*types.MashTemp)({
+          Duration: (float64) 75,
+          Temp: (*types.BoilVolume)({
+            Unit: (*types.Unit)((len=7) "celsius"),
+            Value: (float64) 65
+          })
+        })
+      },
+      Twist: (string) (len=57) "Toasted Coconut Chips – 40g FV & Vanilla Extract – FV"
+    }),
+    Name: (*string)((len=18) "Self Assembly Pope"),
+    Ph: (float64) 5.1,
+    Srm: (float64) 101.6,
+    Tagline: (*string)((len=22) "Coconut Vanilla Porter"),
+    TargetFg: (*int64)(1016),
+    TargetOg: (*float64)(1072),
+    Volume: (*types.BoilVolume)({
+      Unit: (*types.Unit)((len=6) "litres"),
+      Value: (float64) 20
+    })
+  }),
+  (*types.Beer)({
+    Abv: (*float64)(0.5),
+    AttenuationLevel: (*float64)(44),
+    BoilVolume: (*types.BoilVolume)({
+      Unit: (*types.Unit)((len=6) "litres"),
+      Value: (float64) 25
+    }),
+    BrewersTips: (*string)((len=188) "If you don’t need it to be low ABV, try tripling the amount of malt to get more body. Experiment with different sources for lactic acid bacteria, like unpasteurised yogurt or sour dough."),
+    ContributedBy: (*string)((len=26) "John Jenkman <johnjenkman>"),
+    Description: (*string)((len=325) "A draft-only kettle-soured raspberry ale, brewed to just 0.5% ABV, using our knowledge from brewing both Blitz and Nanny State. Aromas of fresh raspberry juice, soft red berries, and a blast of lemon zest, with a juicy palate encompassing zingy acidity and the smooth velvety note of oats, rounding out this low-ABV juicebox."),
+    Ebc: (float64) 8,
+    FirstBrewed: (*string)((len=7) "01/2018"),
+    FoodPairing: ([]string) (len=3) {
+      (string) (len=56) "Walnut and goat's cheese salad with pomegranate dressing",
+      (string) (len=17) "Cranachan pudding",
+      (string) (len=11) "Panna cotta"
+    },
+    Ibu: (float64) 8,
+    ID: (*int64)(299),
+    ImageURL: (strfmt.URI) (len=37) https://images.punkapi.com/v2/keg.png,
+    Ingredients: (*types.Ingredients)({
+      Hops: ([]*types.Hop) (len=2) {
+        (*types.Hop)({
+          Add: (*types.Add)((len=2) "45"),
+          Amount: (*types.BoilVolume)({
+            Unit: (*types.Unit)((len=5) "grams"),
+            Value: (float64) 2
+          }),
+          Attribute: (*types.Attribute)((len=9) "Bittering"),
+          Name: (*string)((len=6) "Magnum")
+        }),
+        (*types.Hop)({
+          Add: (*types.Add)((len=6) "Kettle"),
+          Amount: (*types.BoilVolume)({
+            Unit: (*types.Unit)((len=5) "grams"),
+            Value: (float64) 800
+          }),
+          Attribute: (*types.Attribute)((len=7) "Flavour"),
+          Name: (*string)((len=15) "Raspberry Juice")
+        })
+      },
+      Malt: ([]*types.Malt) (len=4) {
+        (*types.Malt)({
+          Amount: (*types.BoilVolume)({
+            Unit: (*types.Unit)((len=9) "kilograms"),
+            Value: (float64) 0.227
+          }),
+          Name: (*string)((len=11) "Maris Otter")
+        }),
+        (*types.Malt)({
+          Amount: (*types.BoilVolume)({
+            Unit: (*types.Unit)((len=9) "kilograms"),
+            Value: (float64) 0.227
+          }),
+          Name: (*string)((len=15) "Torrified Wheat")
+        }),
+        (*types.Malt)({
+          Amount: (*types.BoilVolume)({
+            Unit: (*types.Unit)((len=9) "kilograms"),
+            Value: (float64) 0.113
+          }),
+          Name: (*string)((len=8) "Carapils")
+        }),
+        (*types.Malt)({
+          Amount: (*types.BoilVolume)({
+            Unit: (*types.Unit)((len=9) "kilograms"),
+            Value: (float64) 0.113
+          }),
+          Name: (*string)((len=11) "Flaked Oats")
+        })
+      },
+      Yeast: (string) (len=29) "Wyeast 1056 - American Ale™"
+    }),
+    Method: (*types.Method)({
+      Fermentation: (*types.Fermentation)({
+        Temp: (*types.BoilVolume)({
+          Unit: (*types.Unit)((len=7) "celsius"),
+          Value: (float64) 21
+        })
+      }),
+      MashTemp: ([]*types.MashTemp) (len=1) {
+        (*types.MashTemp)({
+          Duration: (float64) 80,
+          Temp: (*types.BoilVolume)({
+            Unit: (*types.Unit)((len=7) "celsius"),
+            Value: (float64) 60
+          })
+        })
+      },
+      Twist: (interface {}) <nil>
+    }),
+    Name: (*string)((len=25) "Raspberry Popsicle Parade"),
+    Ph: (float64) 3.5,
+    Srm: (float64) 4,
+    Tagline: (*string)((len=26) "Raspberry Berliner Weisse."),
+    TargetFg: (*int64)(1005),
+    TargetOg: (*float64)(1009),
+    Volume: (*types.BoilVolume)({
+      Unit: (*types.Unit)((len=6) "litres"),
+      Value: (float64) 20
+    })
+  })
+}

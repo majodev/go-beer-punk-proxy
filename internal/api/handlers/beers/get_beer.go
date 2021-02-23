@@ -1,10 +1,12 @@
 package beers
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/labstack/echo/v4"
 	"github.com/majodev/go-beer-punk-proxy/internal/api"
+	"github.com/majodev/go-beer-punk-proxy/internal/api/httperrors"
 	"github.com/majodev/go-beer-punk-proxy/internal/data"
 	"github.com/majodev/go-beer-punk-proxy/internal/models"
 	"github.com/majodev/go-beer-punk-proxy/internal/types/beers"
@@ -33,6 +35,10 @@ func getBeerHandler(s *api.Server) echo.HandlerFunc {
 		if err != nil {
 			log.Debug().Err(err).Msg("Failed to load beer")
 			return err
+		}
+
+		if len(beers) == 0 {
+			return httperrors.NewHTTPError(http.StatusNotFound, "BEER_NOT_FOUND", fmt.Sprintf("No beer found that matches the ID %v", params.ID))
 		}
 
 		response, err := data.MarschalBeers(beers)

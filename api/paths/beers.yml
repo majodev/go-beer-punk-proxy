@@ -145,6 +145,10 @@ paths:
           description: GetBeersResponse
           schema:
             $ref: ../definitions/beers.yml#/definitions/GetBeersResponse
+        "404":
+          description: "PublicHTTPError, type `BEER_NOT_FOUND`"
+          schema:
+            $ref: "../definitions/errors.yml#/definitions/PublicHTTPError"
 
   /api/v1/beers/random:
     get:

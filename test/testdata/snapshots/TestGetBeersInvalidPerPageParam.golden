@@ -1,0 +1,15 @@
+(types.PublicHTTPValidationError) {
+  PublicHTTPError: (types.PublicHTTPError) {
+    Code: (*int64)(400),
+    Detail: (string) "",
+    Title: (*string)((len=11) "Bad Request"),
+    Type: (*string)((len=7) "generic")
+  },
+  ValidationErrors: ([]*types.HTTPValidationErrorDetail) (len=1) {
+    (*types.HTTPValidationErrorDetail)({
+      Error: (*string)((len=52) "per_page in query should be less than or equal to 80"),
+      In: (*string)((len=5) "query"),
+      Key: (*string)((len=8) "per_page")
+    })
+  }
+}
