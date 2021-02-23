@@ -4,7 +4,7 @@
 # --- https://hub.docker.com/_/golang
 # --- https://github.com/microsoft/vscode-remote-try-go/blob/master/.devcontainer/Dockerfile
 ### -----------------------
-FROM golang:1.15.8 AS development
+FROM golang:1.16.0 AS development
 
 # Avoid warnings by switching to noninteractive
 ENV DEBIAN_FRONTEND=noninteractive
@@ -71,16 +71,15 @@ RUN sed -i -e 's/# en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen && \
 
 ENV LANG en_US.UTF-8
 
-# sql pgFormatter: Install the same version of pg_formatter as used in your editors.
-# as of 2020-10 thats v4.4.
+# sql pgFormatter: Integrates with vscode-pgFormatter (we pin pgFormatter.pgFormatterPath for the extension to this version)
 # requires perl to be installed
 # https://github.com/bradymholt/vscode-pgFormatter/commits/master
 # https://github.com/darold/pgFormatter/releases
 RUN mkdir -p /tmp/pgFormatter \
     && cd /tmp/pgFormatter \
-    && wget https://github.com/darold/pgFormatter/archive/v4.4.tar.gz \
-    && tar xzf v4.4.tar.gz \
-    && cd pgFormatter-4.4 \
+    && wget https://github.com/darold/pgFormatter/archive/v5.0.tar.gz \
+    && tar xzf v5.0.tar.gz \
+    && cd pgFormatter-5.0 \
     && perl Makefile.PL \
     && make && make install \
     && rm -rf /tmp/pgFormatter 
@@ -98,7 +97,7 @@ RUN mkdir -p /tmp/gotestsum \
 # https://github.com/golangci/golangci-lint#binary
 # https://github.com/golangci/golangci-lint/releases
 RUN curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh \
-    | sh -s -- -b $(go env GOPATH)/bin v1.36.0
+    | sh -s -- -b $(go env GOPATH)/bin v1.37.1
 
 # go swagger: (this package should NOT be installed via go get) 
 # https://github.com/go-swagger/go-swagger/releases
