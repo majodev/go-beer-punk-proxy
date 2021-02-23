@@ -181,7 +181,13 @@ func Init(s *api.Server) {
 
 		// Your other endpoints, typically secured by bearer auth, available at /api/v1/**
 		APIV1Beers: s.Echo.Group("/api/v1/beers", middleware.Auth(s)),
-		APIV1Push:  s.Echo.Group("/api/v1/push", middleware.Auth(s)),
+		APIV1Admin: s.Echo.Group("/api/v1/admin", echoMiddleware.KeyAuthWithConfig(echoMiddleware.KeyAuthConfig{
+			KeyLookup: "query:mgmt-secret",
+			Validator: func(key string, c echo.Context) (bool, error) {
+				return key == s.Config.Management.Secret, nil
+			},
+		})),
+		APIV1Push: s.Echo.Group("/api/v1/push", middleware.Auth(s)),
 	}
 
 	// ---

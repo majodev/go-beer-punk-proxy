@@ -1,0 +1,75 @@
+swagger: "2.0"
+info:
+  title: github.com/majodev/go-beer-punk-proxy
+  version: 0.1.0
+paths: {}
+definitions:
+  PostBeerPayload:
+    type: object
+    additionalProperties: false
+    properties:
+      # id:
+      #   type: integer
+      name:
+        type: string
+      tagline:
+        type: string
+      first_brewed:
+        type: string
+        example: "04/2008"
+      description:
+        type: string
+      image_url:
+        type: string
+        format: uri
+        example: "https://images.punkapi.com/v2/2.png"
+      abv:
+        type: number
+      ibu:
+        type: number
+      target_fg:
+        type: integer
+      target_og:
+        type: number
+      ebc:
+        type: number
+      srm:
+        type: number
+      ph:
+        type: number
+      attenuation_level:
+        type: number
+      volume:
+        $ref: "../definitions/beers.yml#/definitions/BoilVolume"
+      boil_volume:
+        $ref: "../definitions/beers.yml#/definitions/BoilVolume"
+      method:
+        $ref: "../definitions/beers.yml#/definitions/Method"
+      ingredients:
+        $ref: "../definitions/beers.yml#/definitions/Ingredients"
+      food_pairing:
+        type: array
+        items:
+          type: string
+      brewers_tips:
+        type: string
+      contributed_by:
+        type: string
+    required:
+      - abv
+      - attenuation_level
+      - boil_volume
+      - brewers_tips
+      - contributed_by
+      - description
+      - first_brewed
+      - food_pairing
+      # - id
+      - ingredients
+      - method
+      - name
+      - tagline
+      - target_fg
+      - target_og
+      - volume
+    title: Beer

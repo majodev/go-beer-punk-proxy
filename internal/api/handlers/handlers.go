@@ -4,6 +4,7 @@ package handlers
 import (
 	"github.com/labstack/echo/v4"
 	"github.com/majodev/go-beer-punk-proxy/internal/api"
+	"github.com/majodev/go-beer-punk-proxy/internal/api/handlers/admin"
 	"github.com/majodev/go-beer-punk-proxy/internal/api/handlers/auth"
 	"github.com/majodev/go-beer-punk-proxy/internal/api/handlers/beers"
 	"github.com/majodev/go-beer-punk-proxy/internal/api/handlers/common"
@@ -13,6 +14,7 @@ import (
 func AttachAllRoutes(s *api.Server) {
 	// attach our routes
 	s.Router.Routes = []*echo.Route{
+		admin.GetBeerRoute(s),
 		auth.GetUserInfoRoute(s),
 		auth.PostChangePasswordRoute(s),
 		auth.PostForgotPasswordCompleteRoute(s),

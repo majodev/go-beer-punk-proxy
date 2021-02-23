@@ -12,50 +12,61 @@ func MarschalBeers(beers models.BeerSlice) (types.GetBeersResponse, error) {
 
 	for i, beer := range beers {
 
-		var volume types.BoilVolume
-		if err := volume.UnmarshalBinary(beer.Volume); err != nil {
-			return response, err
+		marschalledBeer, err := MarschalBeer(*beer)
+
+		if err != nil {
+			return nil, err
 		}
 
-		var boilVolume types.BoilVolume
-		if err := boilVolume.UnmarshalBinary(beer.BoilVolume); err != nil {
-			return response, err
-		}
-
-		var method types.Method
-		if err := method.UnmarshalBinary(beer.Method); err != nil {
-			return response, err
-		}
-
-		var ingredients types.Ingredients
-		if err := ingredients.UnmarshalBinary(beer.Ingredients); err != nil {
-			return response, err
-		}
-
-		response[i] = &types.Beer{
-			ID:               swag.Int64(int64(beer.ID)),
-			Name:             &beer.Name,
-			Tagline:          &beer.Tagline,
-			FirstBrewed:      swag.String(beer.FirstBrewed.Format("01/2006")),
-			Description:      &beer.Description,
-			ImageURL:         strfmt.URI(beer.ImageURL.String),
-			Abv:              &beer.Abv,
-			Ibu:              beer.Ibu,
-			TargetFg:         swag.Int64(beer.TargetFG.Int64),
-			TargetOg:         swag.Float64(beer.TargetOg.Float64),
-			Ebc:              swag.Float64(beer.Ebc.Float64),
-			Srm:              swag.Float64(beer.SRM.Float64),
-			Ph:               swag.Float64(beer.PH.Float64),
-			AttenuationLevel: swag.Float64(beer.AttenuationLevel.Float64),
-			Volume:           &volume,
-			BoilVolume:       &boilVolume,
-			Method:           &method,
-			Ingredients:      &ingredients,
-			FoodPairing:      beer.FoodPairing,
-			BrewersTips:      &beer.BrewersTips,
-			ContributedBy:    swag.String(beer.ContributedBy),
-		}
+		response[i] = marschalledBeer
 	}
 
 	return response, nil
+}
+
+func MarschalBeer(beer models.Beer) (*types.Beer, error) {
+
+	var volume types.BoilVolume
+	if err := volume.UnmarshalBinary(beer.Volume); err != nil {
+		return nil, err
+	}
+
+	var boilVolume types.BoilVolume
+	if err := boilVolume.UnmarshalBinary(beer.BoilVolume); err != nil {
+		return nil, err
+	}
+
+	var method types.Method
+	if err := method.UnmarshalBinary(beer.Method); err != nil {
+		return nil, err
+	}
+
+	var ingredients types.Ingredients
+	if err := ingredients.UnmarshalBinary(beer.Ingredients); err != nil {
+		return nil, err
+	}
+
+	return &types.Beer{
+		ID:               swag.Int64(int64(beer.ID)),
+		Name:             &beer.Name,
+		Tagline:          &beer.Tagline,
+		FirstBrewed:      swag.String(beer.FirstBrewed.Format("01/2006")),
+		Description:      &beer.Description,
+		ImageURL:         strfmt.URI(beer.ImageURL.String),
+		Abv:              &beer.Abv,
+		Ibu:              beer.Ibu,
+		TargetFg:         swag.Int64(beer.TargetFG.Int64),
+		TargetOg:         swag.Float64(beer.TargetOg.Float64),
+		Ebc:              swag.Float64(beer.Ebc.Float64),
+		Srm:              swag.Float64(beer.SRM.Float64),
+		Ph:               swag.Float64(beer.PH.Float64),
+		AttenuationLevel: swag.Float64(beer.AttenuationLevel.Float64),
+		Volume:           &volume,
+		BoilVolume:       &boilVolume,
+		Method:           &method,
+		Ingredients:      &ingredients,
+		FoodPairing:      beer.FoodPairing,
+		BrewersTips:      &beer.BrewersTips,
+		ContributedBy:    swag.String(beer.ContributedBy),
+	}, nil
 }

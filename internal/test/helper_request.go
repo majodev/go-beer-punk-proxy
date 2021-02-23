@@ -28,6 +28,28 @@ func (g GenericPayload) Reader(t *testing.T) *bytes.Reader {
 	return bytes.NewReader(b)
 }
 
+// Deep copies GenericPayload (map[string]interface{})
+// Supports nested GenericPayload and []GenericPayload
+// Based on ideas from https://stackoverflow.com/questions/23057785/how-to-copy-a-map
+func (g GenericPayload) Copy() GenericPayload {
+	cp := make(GenericPayload)
+	for k, v := range g {
+		if vm, ok := v.(GenericPayload); ok {
+			cp[k] = vm.Copy()
+		} else if vm, ok := v.([]GenericPayload); ok {
+			slice := make([]GenericPayload, 0, len(vm))
+			for _, vv := range vm {
+				slice = append(slice, vv.Copy())
+			}
+			cp[k] = slice
+		} else {
+			// Note that we expect this to be a copyable primitive type
+			cp[k] = v
+		}
+	}
+	return cp
+}
+
 func PerformRequestWithParams(t *testing.T, s *api.Server, method string, path string, body GenericPayload, headers http.Header, queryParams map[string]string) *httptest.ResponseRecorder {
 	t.Helper()
 

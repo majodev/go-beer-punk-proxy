@@ -23,7 +23,7 @@ func getBeerHandler(s *api.Server) echo.HandlerFunc {
 		params := beers.NewGetBeerRouteParams()
 		log := util.LogFromContext(ctx)
 
-		err := util.BindAndValidate(c, &params)
+		err := util.BindAndValidatePathAndQueryParams(c, &params)
 		if err != nil {
 			return err
 		}

@@ -1,5 +1,9 @@
 -- +migrate Up
 CREATE TABLE beers (
+    -- Note that we do not prefer to use autoincremented integers, instead our primarys are UUIDs!
+    -- However for the sake of compability with the existing Beer-Punk-API we'll use it here.
+    -- Attention, bulk-inserting (predefined IDs) will require us the reset the sequence this primary uses later on
+    -- This will automatically create the seq "beers_id_seq" -> SELECT nextval('beers_id_seq');
     id serial NOT NULL,
     name text NOT NULL,
     tagline text NOT NULL,

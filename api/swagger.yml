@@ -46,6 +46,25 @@ paths:
           description: Ready.
         "521":
           description: Not ready.
+  /api/v1/admin/beers:
+    post:
+      security:
+      - Management: []
+      description: Admin
+      tags:
+      - admin
+      summary: Post Beer
+      operationId: PostBeerRoute
+      parameters:
+      - name: Payload
+        in: body
+        schema:
+          $ref: '#/definitions/postBeerPayload'
+      responses:
+        "200":
+          description: PostBeerResponse
+          schema:
+            $ref: '#/definitions/beer'
   /api/v1/auth/change-password:
     post:
       security:
@@ -646,6 +665,72 @@ definitions:
     enum:
     - asc
     - desc
+  postBeerPayload:
+    type: object
+    title: Beer
+    required:
+    - abv
+    - attenuation_level
+    - boil_volume
+    - brewers_tips
+    - contributed_by
+    - description
+    - first_brewed
+    - food_pairing
+    - ingredients
+    - method
+    - name
+    - tagline
+    - target_fg
+    - target_og
+    - volume
+    properties:
+      abv:
+        type: number
+      attenuation_level:
+        type: number
+      boil_volume:
+        $ref: '#/definitions/boilVolume'
+      brewers_tips:
+        type: string
+      contributed_by:
+        type: string
+      description:
+        type: string
+      ebc:
+        type: number
+      first_brewed:
+        type: string
+        example: 04/2008
+      food_pairing:
+        type: array
+        items:
+          type: string
+      ibu:
+        type: number
+      image_url:
+        type: string
+        format: uri
+        example: https://images.punkapi.com/v2/2.png
+      ingredients:
+        $ref: '#/definitions/ingredients'
+      method:
+        $ref: '#/definitions/method'
+      name:
+        type: string
+      ph:
+        type: number
+      srm:
+        type: number
+      tagline:
+        type: string
+      target_fg:
+        type: integer
+      target_og:
+        type: number
+      volume:
+        $ref: '#/definitions/boilVolume'
+    additionalProperties: false
   postChangePasswordPayload:
     type: object
     required:

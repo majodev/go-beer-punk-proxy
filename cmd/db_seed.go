@@ -79,6 +79,13 @@ func applyFixtures() error {
 		}
 	}
 
+	// https://stackoverflow.com/questions/4448340/postgresql-duplicate-key-violates-unique-constraint/21639138
+	_, err = tx.ExecContext(ctx, `SELECT setval('beers_id_seq', (SELECT MAX(id) FROM beers)+1);`)
+
+	if err != nil {
+		return err
+	}
+
 	if err := tx.Commit(); err != nil {
 		return err
 	}

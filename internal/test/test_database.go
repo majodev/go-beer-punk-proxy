@@ -190,6 +190,14 @@ func insertFixtures(ctx context.Context, t *testing.T, db *sql.DB) error {
 		}
 	}
 
+	// Typically we do not use serial ids (auto-incrementing), resetting the sequence after bulk-importing is neccessary
+	// https://stackoverflow.com/questions/4448340/postgresql-duplicate-key-violates-unique-constraint/21639138
+	_, err = tx.ExecContext(ctx, `SELECT setval('beers_id_seq', (SELECT MAX(id) FROM beers)+1);`)
+
+	if err != nil {
+		return err
+	}
+
 	if err := tx.Commit(); err != nil {
 		return err
 	}

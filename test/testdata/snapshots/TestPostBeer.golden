@@ -1,0 +1,71 @@
+(types.Beer) {
+  Abv: (*float64)(12),
+  AttenuationLevel: (*float64)(78),
+  BoilVolume: (*types.BoilVolume)({
+    Unit: (*types.Unit)((len=6) "litres"),
+    Value: (float64) 25
+  }),
+  BrewersTips: (*string)((len=126) "If your mash run off takes a long time, increase the temperature of your sparge water to keep the mash bed warm and permeable."),
+  ContributedBy: (*string)((len=22) "Mario Ranftl <majodev>"),
+  Description: (*string)((len=30) "This is our workshop test beer"),
+  Ebc: (float64) 390,
+  FirstBrewed: (*string)((len=7) "01/2021"),
+  FoodPairing: ([]string) (len=2) {
+    (string) (len=23) "Affogato with ice cream",
+    (string) (len=14) "Chocolate cake"
+  },
+  Ibu: (float64) 75,
+  ID: (*int64)(327),
+  ImageURL: (strfmt.URI) ,
+  Ingredients: (*types.Ingredients)({
+    Hops: ([]*types.Hop) (len=1) {
+      (*types.Hop)({
+        Add: (*types.Add)((len=7) "Dry Hop"),
+        Amount: (*types.BoilVolume)({
+          Unit: (*types.Unit)((len=5) "grams"),
+          Value: (float64) 10
+        }),
+        Attribute: (*types.Attribute)((len=7) "Flavour"),
+        Name: (*string)((len=13) "Ground Coffee")
+      })
+    },
+    Malt: ([]*types.Malt) (len=1) {
+      (*types.Malt)({
+        Amount: (*types.BoilVolume)({
+          Unit: (*types.Unit)((len=9) "kilograms"),
+          Value: (float64) 5.88
+        }),
+        Name: (*string)((len=9) "Chocolate")
+      })
+    },
+    Yeast: (string) (len=29) "Wyeast 1056 - American Ale™"
+  }),
+  Method: (*types.Method)({
+    Fermentation: (*types.Fermentation)({
+      Temp: (*types.BoilVolume)({
+        Unit: (*types.Unit)((len=7) "celsius"),
+        Value: (float64) 21
+      })
+    }),
+    MashTemp: ([]*types.MashTemp) (len=1) {
+      (*types.MashTemp)({
+        Duration: (float64) 135,
+        Temp: (*types.BoilVolume)({
+          Unit: (*types.Unit)((len=7) "celsius"),
+          Value: (float64) 64
+        })
+      })
+    },
+    Twist: (interface {}) <nil>
+  }),
+  Name: (*string)((len=13) "AAA Test beer"),
+  Ph: (float64) 4.4,
+  Srm: (float64) 198,
+  Tagline: (*string)((len=14) "all about apps"),
+  TargetFg: (*int64)(1025),
+  TargetOg: (*float64)(1116),
+  Volume: (*types.BoilVolume)({
+    Unit: (*types.Unit)((len=6) "litres"),
+    Value: (float64) 20
+  })
+}
