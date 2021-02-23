@@ -1,0 +1,54 @@
+version: "3.4"
+services:
+  service-prod:
+    # image: <your built Docker image>
+    # or use the build tag to build the until the final docker stage.
+    build:
+      context: .
+      target: app # we build the final app image (final stage)
+    ports:
+      - "8080:8080"
+    volumes:
+      # only mount the uploads directory
+      - assets-mnt:/app/assets/mnt
+    depends_on:
+      - postgres-prod
+    restart: on-failure
+    environment:
+      # required: env for production database, service
+      PGDATABASE: &PGDATABASE "production"
+      PGUSER: &PGUSER "dbuser" # TODO: change me if you are running this live!
+      PGPASSWORD: &PGPASSWORD "dbpass" # TODO: change me if you are running this live!
+      PGHOST: &PGHOST "postgres-prod"
+      PGPORT: &PGPORT "5432"
+      PGSSLMODE: &PGSSLMODE "disable"
+
+  postgres-prod:
+    image: postgres:12.4-alpine # should be the same version as used in .drone.yml, .github/workflows, Dockerfile and live
+    expose:
+      - "5432"
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: *PGDATABASE
+      POSTGRES_USER: *PGUSER
+      POSTGRES_PASSWORD: *PGPASSWORD
+    volumes:
+      - pgvolume-prod:/var/lib/postgresql/data
+
+  swaggerui-prod:
+    image: swaggerapi/swagger-ui:v3.28.0
+    ports:
+      - "8081:8080"
+    depends_on:
+      - service-prod
+    environment:
+      URL: "http://127.0.0.1:8080/swagger.yml"
+      VALIDATOR_URL: ""
+
+volumes:
+  # postgresql: declare a named volume to persist DB data
+  pgvolume-prod:
+
+  # assets: declare a named volume to persist uploads (at /app/assets/mnt/*)
+  assets-mnt:
