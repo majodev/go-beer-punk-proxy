@@ -4,6 +4,8 @@ This project acts as a showcase on how to work with [allaboutapps/go-starter](ht
 
 Please follow the steps in **[go-beer-punk-proxy wiki](https://github.com/majodev/go-beer-punk-proxy/wiki)**.
 
+The server/swagger documentation of this project is available here: [Beer Workshop API Documentation](https://beer-workshop-dev.allaboutapps.at/documentation/).
+
 ### Origins 
 
 The original RESTful JSON API is available at [punkapi.com/documentation/v2](https://punkapi.com/documentation/v2). Kudos to the original project [samjbmason/punkapi](https://github.com/samjbmason/punkapi) and BrewDog's hugely generous [DIY Dog](https://www.brewdog.com/diydog) 🍺🍻 (for providing free beers data).
