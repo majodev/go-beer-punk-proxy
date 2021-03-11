@@ -2,14 +2,6 @@
 # --- Building
 ### -----------------------
 
-# go module name (as in go.mod)
-# only evaluated if required by a recipe
-# http://make.mad-scientist.net/deferred-simple-variable-expansion/
-GO_MODULE_NAME = $(eval GO_MODULE_NAME := $$(shell \
-	(mkdir -p tmp 2> /dev/null && cat tmp/.modulename 2> /dev/null) \
-	|| (go run -tags scripts scripts/modulename/modulename.go | tee tmp/.modulename) \
-))$(GO_MODULE_NAME)
-
 # first is default target when running "make" without args
 build: ##- Default make target: make build-pre, go-format, go-build and lint.
 	@$(MAKE) build-pre
@@ -40,14 +32,14 @@ info: ##- Prints database spec, prints handlers, go module-name and current go v
 lint: check-gen-dirs check-handlers check-embedded-modules-go-not go-lint  ##- (opt) Runs golangci-lint and make check-*.
 
 # these recipies may execute in parallel
-build-pre: sql swagger ##- (opt) Runs prebuild related targets (sql, swagger, go-generate).
+build-pre: sql swagger ##- (opt) Runs pre-build related targets (sql, swagger, go-generate).
 	@$(MAKE) go-generate
 
 go-format: ##- (opt) Runs go format.
 	go fmt ./...
 
 go-build: ##- (opt) Runs go build.
-	go build -o bin/app
+	go build -ldflags $(LDFLAGS) -o bin/app
 
 go-lint: ##- (opt) Runs golangci-lint.
 	golangci-lint run --fast --timeout 5m
@@ -167,7 +159,7 @@ sql-format: ##- (opt) Formats all *.sql files.
 	@find ${PWD} -name ".*" -prune -o -type f -iname "*.sql" -print \
 		| xargs -i pg_format {} -o {}
 
-sql-check-files: sql-check-syntax sql-check-migrations-unnecessary-null ##- (opt) Check syntax and unneccessary use of NULL keyword.
+sql-check-files: sql-check-syntax sql-check-migrations-unnecessary-null ##- (opt) Check syntax and unnecessary use of NULL keyword.
 
 # check syntax via the real database
 # https://stackoverflow.com/questions/8271606/postgresql-syntax-check-without-running-the-query
@@ -177,7 +169,7 @@ sql-check-syntax: ##- (opt) Checks syntax of all *.sql files.
 		| xargs -i sed '1s#^#DO $$SYNTAX_CHECK$$ BEGIN RETURN;#; $$aEND; $$SYNTAX_CHECK$$;' {} \
 		| psql -d postgres --quiet -v ON_ERROR_STOP=1
 
-sql-check-migrations-unnecessary-null: ##- (opt) Checks migrations/*.sql for unneccessary use of NULL keywords.
+sql-check-migrations-unnecessary-null: ##- (opt) Checks migrations/*.sql for unnecessary use of NULL keywords.
 	@echo "make sql-check-migrations-unnecessary-null"
 	@(grep -R "NULL" ./migrations/ | grep --invert "DEFAULT NULL" | grep --invert "NOT NULL" | grep --invert "WITH NULL" | grep --invert "NULL, " | grep --invert ", NULL" | grep --invert "RETURN NULL" | grep --invert "SET NULL") \
 		&& exit 1 || exit 0
@@ -271,7 +263,7 @@ get-embedded-modules: ##- (opt) Prints embedded modules in the compiled bin/app.
 get-embedded-modules-count: ##- (opt) Prints count of embedded modules in the compiled bin/app.
 	go version -m -v bin/app | grep $$'\tdep' | wc -l
 
-check-embedded-modules-go-not: ##- (opt) Checks embedded modules in compiled bin/app against go.not, throws on occurance.
+check-embedded-modules-go-not: ##- (opt) Checks embedded modules in compiled bin/app against go.not, throws on occurrence.
 	@echo "make check-embedded-modules-go-not"
 	@(mkdir -p tmp 2> /dev/null && go version -m -v bin/app > tmp/.modules)
 	grep -f go.not -F tmp/.modules && (echo "go.not: Found disallowed embedded module(s) in bin/app!" && exit 1) || exit 0
@@ -295,10 +287,10 @@ git-compare-go-starter: ##- Compare upstream go-starter master to HEAD displayin
 git-merge-go-starter: ##- Merges upstream go-starter master into current HEAD.
 	@$(MAKE) git-compare-go-starter
 	@(echo "" \
-		&& echo "Attempting to execute 'git merge --no-commit --no-ff go-starter/master' into your current HEAD." \
+		&& echo "Attempting to execute 'git merge --no-commit --no-ff --allow-unrelated-histories go-starter/master' into your current HEAD." \
 		&& echo -n "Are you sure? [y/N]" \
 		&& read ans && [ $${ans:-N} = y ]) || exit 1
-	git merge --no-commit --no-ff go-starter/master
+	git merge --no-commit --no-ff --allow-unrelated-histories go-starter/master
 
 ### -----------------------
 # --- Helpers
@@ -327,8 +319,11 @@ set-module-name: ##- Wizard to set a new go module-name.
 		&& echo "new go module-name: '$${new_module_name}'!"
 	@rm -f tmp/.modulename
 
-force-module-name: ##- Overwrite occurences of 'allaboutapps.dev/aw/go-starter' with current go module-name.
+force-module-name: ##- Overwrite occurrences of 'allaboutapps.dev/aw/go-starter' with current go module-name.
 	find . -not -path '*/\.*' -not -path './Makefile' -type f -exec sed -i "s|allaboutapps.dev/aw/go-starter|${GO_MODULE_NAME}|g" {} \;
+
+get-go-ldflags: ##- (opt) Prints used -ldflags as evaluated in Makefile used in make go-build
+	@echo $(LDFLAGS)
 
 # https://gist.github.com/prwhite/8168133 - based on comment from @m000
 help: ##- Show this help.
@@ -336,6 +331,36 @@ help: ##- Show this help.
 	@echo "note: targets flagged with '(opt)' are *internal* and executed as part of another target."
 	@echo ""
 	@sed -e '/#\{2\}-/!d; s/\\$$//; s/:[^#\t]*/@/; s/#\{2\}- *//' $(MAKEFILE_LIST) | sort | column -t -s '@'
+
+### -----------------------
+# --- Make variables
+### -----------------------
+
+# only evaluated if required by a recipe
+# http://make.mad-scientist.net/deferred-simple-variable-expansion/
+
+# go module name (as in go.mod)
+GO_MODULE_NAME = $(eval GO_MODULE_NAME := $$(shell \
+	(mkdir -p tmp 2> /dev/null && cat tmp/.modulename 2> /dev/null) \
+	|| (go run -tags scripts scripts/modulename/modulename.go | tee tmp/.modulename) \
+))$(GO_MODULE_NAME)
+
+# https://medium.com/the-go-journey/adding-version-information-to-go-binaries-e1b79878f6f2
+ARG_COMMIT = $(eval ARG_COMMIT := $$(shell \
+	(git rev-list -1 HEAD 2> /dev/null) \
+	|| (echo "unknown") \
+))$(ARG_COMMIT)
+
+ARG_BUILD_DATE = $(eval ARG_BUILD_DATE := $$(shell \
+	(date -Is) \
+))$(ARG_BUILD_DATE)
+
+# https://www.digitalocean.com/community/tutorials/using-ldflags-to-set-version-information-for-go-applications
+LDFLAGS = $(eval LDFLAGS := "\
+-X '$(GO_MODULE_NAME)/internal/config.ModuleName=$(GO_MODULE_NAME)'\
+-X '$(GO_MODULE_NAME)/internal/config.Commit=$(ARG_COMMIT)'\
+-X '$(GO_MODULE_NAME)/internal/config.BuildDate=$(ARG_BUILD_DATE)'\
+")$(LDFLAGS)
 
 ### -----------------------
 # --- Special targets
