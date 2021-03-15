@@ -11,6 +11,7 @@ import (
 	"github.com/allaboutapps/integresql-client-go/pkg/util"
 	"github.com/majodev/go-beer-punk-proxy/internal/data"
 	pUtil "github.com/majodev/go-beer-punk-proxy/internal/util"
+	dbutil "github.com/majodev/go-beer-punk-proxy/internal/util/db"
 	migrate "github.com/rubenv/sql-migrate"
 	"github.com/volatiletech/sqlboiler/v4/boil"
 )
@@ -157,52 +158,42 @@ func insertFixtures(ctx context.Context, t *testing.T, db *sql.DB) error {
 
 	t.Helper()
 
-	tx, err := db.BeginTx(ctx, nil)
-	if err != nil {
-		return err
-	}
+	// insert test fixtures in an auto-managed db transaction
+	return dbutil.WithTransaction(ctx, db, func(tx boil.ContextExecutor) error {
+		inserts := Inserts()
 
-	inserts := Inserts()
-
-	for _, fixture := range inserts {
-		if err := fixture.Insert(ctx, db, boil.Infer()); err != nil {
-			if err := tx.Rollback(); err != nil {
+		for _, fixture := range inserts {
+			if err := fixture.Insert(ctx, tx, boil.Infer()); err != nil {
+				t.Errorf("Failed to upsert test fixture: %v\n", err)
 				return err
 			}
+		}
 
+		t.Logf("Inserted %d fixtures for hash %q", len(inserts), hash)
+
+		beers, err := data.GetUpsertableBeerModels()
+
+		if err != nil {
 			return err
 		}
-	}
 
-	beers, err := data.GetUpsertableBeerModels()
-
-	if err != nil {
-		return err
-	}
-
-	for _, beer := range beers {
-		if err := beer.Insert(ctx, tx, boil.Infer()); err != nil {
-			if err := tx.Rollback(); err != nil {
+		for _, beer := range beers {
+			if err := beer.Insert(ctx, tx, boil.Infer()); err != nil {
+				t.Errorf("Failed to upsert test beer: %v\n", err)
 				return err
 			}
+		}
 
+		t.Logf("Inserted %d beers for hash %q", len(beers), hash)
+
+		// Typically we do not use serial ids (auto-incrementing), resetting the sequence after bulk-importing is neccessary
+		// https://stackoverflow.com/questions/4448340/postgresql-duplicate-key-violates-unique-constraint/21639138
+		if _, err = tx.ExecContext(ctx, `SELECT setval('beers_id_seq', (SELECT MAX(id) FROM beers)+1);`); err != nil {
 			return err
 		}
-	}
 
-	// Typically we do not use serial ids (auto-incrementing), resetting the sequence after bulk-importing is neccessary
-	// https://stackoverflow.com/questions/4448340/postgresql-duplicate-key-violates-unique-constraint/21639138
-	_, err = tx.ExecContext(ctx, `SELECT setval('beers_id_seq', (SELECT MAX(id) FROM beers)+1);`)
+		t.Log("Reset beers_id_seq.")
 
-	if err != nil {
-		return err
-	}
-
-	if err := tx.Commit(); err != nil {
-		return err
-	}
-
-	t.Logf("Inserted %d fixtures for hash %q", len(inserts), hash)
-
-	return nil
+		return nil
+	})
 }

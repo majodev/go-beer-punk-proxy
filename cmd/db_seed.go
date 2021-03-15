@@ -8,6 +8,7 @@ import (
 
 	"github.com/majodev/go-beer-punk-proxy/internal/config"
 	"github.com/majodev/go-beer-punk-proxy/internal/data"
+	dbutil "github.com/majodev/go-beer-punk-proxy/internal/util/db"
 	"github.com/spf13/cobra"
 	"github.com/volatiletech/sqlboiler/v4/boil"
 )
@@ -46,49 +47,43 @@ func applyFixtures() error {
 		return err
 	}
 
-	tx, err := db.BeginTx(ctx, nil)
-	if err != nil {
-		return err
-	}
+	// insert fixtures in an auto-managed db transaction
+	return dbutil.WithTransaction(ctx, db, func(tx boil.ContextExecutor) error {
 
-	fixtures := data.Upserts()
+		fixtures := data.Upserts()
 
-	for _, fixture := range fixtures {
-		if err := fixture.Upsert(ctx, db, true, nil, boil.Infer(), boil.Infer()); err != nil {
-			if err := tx.Rollback(); err != nil {
+		for _, fixture := range fixtures {
+			if err := fixture.Upsert(ctx, tx, true, nil, boil.Infer(), boil.Infer()); err != nil {
+				fmt.Printf("Failed to upsert fixture: %v\n", err)
 				return err
 			}
+		}
 
+		fmt.Printf("Upserted %d fixtures.\n", len(fixtures))
+
+		beers, err := data.GetUpsertableBeerModels()
+
+		if err != nil {
 			return err
 		}
-	}
 
-	beers, err := data.GetUpsertableBeerModels()
-
-	if err != nil {
-		return err
-	}
-
-	for _, beer := range beers {
-		if err := beer.Upsert(ctx, tx, true, nil, boil.Infer(), boil.Infer()); err != nil {
-			if err := tx.Rollback(); err != nil {
+		for _, beer := range beers {
+			if err := beer.Upsert(ctx, tx, true, nil, boil.Infer(), boil.Infer()); err != nil {
+				fmt.Printf("Failed to upsert beer: %v\n", err)
 				return err
 			}
+		}
 
+		fmt.Printf("Upserted %d beers.\n", len(beers))
+
+		// https://stackoverflow.com/questions/4448340/postgresql-duplicate-key-violates-unique-constraint/21639138
+		if _, err = tx.ExecContext(ctx, `SELECT setval('beers_id_seq', (SELECT MAX(id) FROM beers)+1);`); err != nil {
 			return err
 		}
-	}
 
-	// https://stackoverflow.com/questions/4448340/postgresql-duplicate-key-violates-unique-constraint/21639138
-	_, err = tx.ExecContext(ctx, `SELECT setval('beers_id_seq', (SELECT MAX(id) FROM beers)+1);`)
+		fmt.Println("Reset beers_id_seq.")
 
-	if err != nil {
-		return err
-	}
+		return nil
 
-	if err := tx.Commit(); err != nil {
-		return err
-	}
-
-	return nil
+	})
 }
