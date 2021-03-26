@@ -3,33 +3,38 @@
 ### -----------------------
 
 # first is default target when running "make" without args
-build: ##- Default make target: make build-pre, go-format, go-build and lint.
+build: ##- Default 'make' target: sql, swagger, go-generate, go-format, go-build and lint.
 	@$(MAKE) build-pre
 	@$(MAKE) go-format
 	@$(MAKE) go-build
 	@$(MAKE) lint
 
 # useful to ensure that everything gets resetuped from scratch
-all: ##- Runs (pretty much) all targets: make clean, init, build, info and test.
-	@$(MAKE) clean
-	@$(MAKE) init
+all: clean init ##- Runs all of our common make targets: clean, init, build and test.
 	@$(MAKE) build
-	@$(MAKE) info
 	@$(MAKE) test
 
-info: ##- Prints database spec, prints handlers, go module-name and current go version.
-	@echo "database:"
-	@cat scripts/sql/info.sql | psql -q -d "${PSQL_DBNAME}"
-	@echo "handlers:"
-	@go run -tags scripts scripts/handlers/check_handlers.go --print-all
-	@echo ""
-	@echo "go.mod updates:"
-	@$(MAKE) get-go-outdated-modules
-	@echo ""
-	@$(MAKE) info-module-name
-	@go version
+info: info-db info-handlers info-go ##- Prints info about spec db, handlers, and go.mod updates, module-name and current go version.
 
-lint: check-gen-dirs check-handlers check-embedded-modules-go-not go-lint  ##- (opt) Runs golangci-lint and make check-*.
+info-db: ##- (opt) Prints info about spec db.
+	@echo "[spec DB]" > tmp/.info-db
+	@cat scripts/sql/info.sql | psql -q -d "${PSQL_DBNAME}" >> tmp/.info-db
+	@cat tmp/.info-db
+
+info-handlers: ##- (opt) Prints info about handlers.
+	@echo "[handlers]" > tmp/.info-handlers
+	@go run -tags scripts scripts/handlers/check_handlers.go --print-all >> tmp/.info-handlers
+	@echo "" >> tmp/.info-handlers
+	@cat tmp/.info-handlers
+
+info-go: ##- (opt) Prints go.mod updates, module-name and current go version.
+	@echo "[go.mod]" > tmp/.info-go
+	@$(MAKE) get-go-outdated-modules >> tmp/.info-go
+	@$(MAKE) info-module-name >> tmp/.info-go
+	@go version >> tmp/.info-go
+	@cat tmp/.info-go
+
+lint: check-gen-dirs check-handlers check-embedded-modules-go-not go-lint  ##- Runs golangci-lint and make check-*.
 
 # these recipies may execute in parallel
 build-pre: sql swagger ##- (opt) Runs pre-build related targets (sql, swagger, go-generate).
@@ -57,8 +62,8 @@ check-handlers: ##- (opt) Checks if implemented handlers match their spec (path)
 #    ^// Code generated .* DO NOT EDIT\.$
 check-gen-dirs: ##- (opt) Ensures internal/models|types only hold generated files.
 	@echo "make check-gen-dirs"
-	@grep -R -L '^// Code generated .* DO NOT EDIT\.$$' ./internal/types/ && exit 1 || exit 0
-	@grep -R -L '^// Code generated .* DO NOT EDIT\.$$' ./internal/models/ && exit 1 || exit 0
+	@grep -R -L '^// Code generated .* DO NOT EDIT\.$$' --exclude ".DS_Store" ./internal/types/ && echo "Error: Non generated file(s) in ./internal/types!" && exit 1 || exit 0
+	@grep -R -L '^// Code generated .* DO NOT EDIT\.$$' --exclude ".DS_Store" ./internal/models/ && echo "Error: Non generated file(s) in ./internal/models!" && && exit 1 || exit 0
 
 # https://github.com/gotestyourself/gotestsum#format 
 # w/o cache https://github.com/golang/go/issues/24573 - see "go help testflag"
@@ -85,9 +90,10 @@ go-test-print-coverage: ##- (opt) Print overall test coverage (must be done afte
 	@printf "coverage "
 	@go tool cover -func=/tmp/coverage.out | tail -n 1 | awk '{$$1=$$1;print}'
 
-go-test-print-slowest: ##- (opt) Print slowest running tests (must be done after running tests).
+go-test-print-slowest: ##- Print slowest running tests (must be done after running tests).
 	gotestsum tool slowest --jsonfile /tmp/test.log --threshold 2s
 
+# TODO: switch to "-m direct" after go 1.17 hits: https://github.com/golang/go/issues/40364
 get-go-outdated-modules: ##- (opt) Prints outdated (direct) go modules (from go.mod). 
 	@((go list -u -m -f '{{if and .Update (not .Indirect)}}{{.}}{{end}}' all) 2>/dev/null | grep " ") || echo "go modules are up-to-date."
 
@@ -98,11 +104,10 @@ watch-tests: ##- Watches *.go files and runs package tests on modifications.
 # --- Initializing
 ### -----------------------
 
-init: ##-  Runs make modules, tools and tidy.
+init: ##- Runs make modules, tools and tidy.
 	@$(MAKE) modules
 	@$(MAKE) tools
 	@$(MAKE) tidy
-	@go version
 
 # cache go modules (locally into .pkg)
 modules: ##- (opt) Cache packages as specified in go.mod.
@@ -110,7 +115,7 @@ modules: ##- (opt) Cache packages as specified in go.mod.
 
 # https://marcofranssen.nl/manage-go-tools-via-go-modules/
 tools: ##- (opt) Install packages as specified in tools.go.
-	cat tools.go | grep _ | awk -F'"' '{print $$2}' | xargs -tI % go install %
+	@cat tools.go | grep _ | awk -F'"' '{print $$2}' | xargs -P $$(nproc) -L 1 -tI % go install %
 
 tidy: ##- (opt) Tidy our go.sum file.
 	go mod tidy
@@ -181,7 +186,7 @@ sql-spec-reset: ##- (opt) Drop and creates our spec database.
 
 sql-spec-migrate: ##- (opt) Applies migrations/*.sql to our spec database.
 	@echo "make sql-spec-migrate"
-	@sql-migrate up -env spec
+	@sql-migrate up -env spec | xargs -i echo "[spec DB]" {}
 
 sql-check-structure: sql-check-structure-fk-missing-index sql-check-structure-default-zero-values ##- (opt) Runs make sql-check-structure-*.
 
@@ -201,7 +206,7 @@ watch-sql: ##- Watches *.sql files in /migrations and runs 'make sql-regenerate'
 # --- Swagger
 ### -----------------------
 
-swagger: ##- (opt) Runs make swagger-concat and swagger-server.
+swagger: ##- Runs make swagger-concat and swagger-server.
 	@$(MAKE) swagger-concat
 	@$(MAKE) swagger-server
 
@@ -250,14 +255,10 @@ watch-swagger: ##- Watches *.yml|yaml|gotmpl files in /api and runs 'make swagge
 # --- Binary checks
 ### -----------------------
 
-get-licenses: ##- (opt) Prints licenses of embedded modules in the compiled bin/app.
-ifndef GITHUB_TOKEN
-	$(warning Please specify GITHUB_TOKEN otherwise you will run into rate-limits!)
-	$(warning https://github.com/mitchellh/golicense#github-authentication)
-endif
-	golicense bin/app || exit 0
+get-licenses: ##- Prints licenses of embedded modules in the compiled bin/app.
+	lichen bin/app
 
-get-embedded-modules: ##- (opt) Prints embedded modules in the compiled bin/app.
+get-embedded-modules: ##- Prints embedded modules in the compiled bin/app.
 	go version -m -v bin/app
 
 get-embedded-modules-count: ##- (opt) Prints count of embedded modules in the compiled bin/app.
@@ -272,11 +273,11 @@ check-embedded-modules-go-not: ##- (opt) Checks embedded modules in compiled bin
 # --- Git related
 ### -----------------------
 
-git-fetch-go-starter: ##- Fetches upstream go-starter master (creating git remote 'go-starter').
+git-fetch-go-starter: ##- (opt) Fetches upstream go-starter master (creating git remote 'go-starter').
 	@git config remote.go-starter.url >&- || git remote add go-starter https://github.com/allaboutapps/go-starter.git
 	@git fetch go-starter master
 
-git-compare-go-starter: ##- Compare upstream go-starter master to HEAD displaying commits away and git log.
+git-compare-go-starter: ##- (opt) Compare upstream go-starter master to HEAD displaying commits away and git log.
 	@$(MAKE) git-fetch-go-starter
 	@echo "Commits away from upstream go-starter master:"
 	git --no-pager rev-list --pretty=oneline --left-only --count go-starter/master...HEAD
@@ -297,11 +298,12 @@ git-merge-go-starter: ##- Merges upstream go-starter master into current HEAD.
 # --- Helpers
 ### -----------------------
 
-clean: ##- (opt) Cleans tmp and api/tmp folder.
-	rm -rf tmp
-	rm -rf api/tmp
+clean: ##- Cleans ./tmp and ./api/tmp folder.
+	@echo "make clean"
+	@rm -rf tmp 2> /dev/null
+	@rm -rf api/tmp 2> /dev/null
 
-get-module-name: ##- (opt) Prints current go module-name (pipeable).
+get-module-name: ##- Prints current go module-name (pipeable).
 	@echo "${GO_MODULE_NAME}"
 
 info-module-name: ##- (opt) Prints current go module-name.
@@ -327,9 +329,15 @@ get-go-ldflags: ##- (opt) Prints used -ldflags as evaluated in Makefile used in 
 	@echo $(LDFLAGS)
 
 # https://gist.github.com/prwhite/8168133 - based on comment from @m000
-help: ##- Show this help.
+help: ##- Show common make targets.
 	@echo "usage: make <target>"
-	@echo "note: targets flagged with '(opt)' are *internal* and executed as part of another target."
+	@echo "note: use 'make help-all' to see all make targets."
+	@echo ""
+	@sed -e '/#\{2\}-/!d; s/\\$$//; s/:[^#\t]*/@/; s/#\{2\}- *//' $(MAKEFILE_LIST) | grep --invert "(opt)" | sort | column -t -s '@'
+
+help-all: ##- Show all make targets.
+	@echo "usage: make <target>"
+	@echo "note: make targets flagged with '(opt)' are part of a main target."
 	@echo ""
 	@sed -e '/#\{2\}-/!d; s/\\$$//; s/:[^#\t]*/@/; s/#\{2\}- *//' $(MAKEFILE_LIST) | sort | column -t -s '@'
 

@@ -97,7 +97,7 @@ RUN mkdir -p /tmp/gotestsum \
 # https://github.com/golangci/golangci-lint#binary
 # https://github.com/golangci/golangci-lint/releases
 RUN curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh \
-    | sh -s -- -b $(go env GOPATH)/bin v1.38.0
+    | sh -s -- -b $(go env GOPATH)/bin v1.39.0
 
 # go swagger: (this package should NOT be installed via go get) 
 # https://github.com/go-swagger/go-swagger/releases
@@ -105,14 +105,10 @@ RUN curl -o /usr/local/bin/swagger -L'#' \
     "https://github.com/go-swagger/go-swagger/releases/download/v0.26.1/swagger_linux_amd64" \
     && chmod +x /usr/local/bin/swagger
 
-# golicense: (this package should NOT be installed via go get) 
-# https://github.com/mitchellh/golicense/releases
-RUN mkdir -p /tmp/golicense \
-    && cd /tmp/golicense \
-    && wget https://github.com/mitchellh/golicense/releases/download/v0.2.0/golicense_0.2.0_linux_x86_64.tar.gz \
-    && tar xzf golicense_0.2.0_linux_x86_64.tar.gz \
-    && cp golicense /usr/local/bin/golicense \
-    && rm -rf /tmp/golicense
+# lichen: go license util 
+# TODO: Install from static binary as soon as it becomes available.
+# https://github.com/uw-labs/lichen/releases
+RUN go install github.com/uw-labs/lichen@v0.1.3
 
 # watchexec
 # https://github.com/watchexec/watchexec/releases

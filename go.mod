@@ -9,7 +9,7 @@ require (
 	github.com/friendsofgo/errors v0.9.2
 	github.com/gabriel-vasile/mimetype v1.2.0
 	github.com/go-openapi/errors v0.20.0
-	github.com/go-openapi/runtime v0.19.26
+	github.com/go-openapi/runtime v0.19.27
 	github.com/go-openapi/strfmt v0.20.0
 	github.com/go-openapi/swag v0.19.14
 	github.com/go-openapi/validate v0.20.2
@@ -20,7 +20,7 @@ require (
 	github.com/pkg/errors v0.9.1
 	github.com/pmezard/go-difflib v1.0.0
 	github.com/rogpeppe/go-internal v1.8.0
-	github.com/rs/zerolog v1.20.0
+	github.com/rs/zerolog v1.21.0
 	github.com/rubenv/sql-migrate v0.0.0-20210215143335-f84234893558
 	github.com/spf13/cobra v1.1.3
 	github.com/spf13/viper v1.7.1
@@ -30,6 +30,6 @@ require (
 	github.com/volatiletech/sqlboiler/v4 v4.5.0
 	github.com/volatiletech/strmangle v0.0.1
 	golang.org/x/crypto v0.0.0-20210314154223-e6e6c4f2bb5b
-	golang.org/x/sys v0.0.0-20210314195730-07df6a141424
-	google.golang.org/api v0.41.0
+	golang.org/x/sys v0.0.0-20210320140829-1e4c9ba3b0c4
+	google.golang.org/api v0.43.0
 )
