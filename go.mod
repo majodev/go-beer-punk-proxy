@@ -30,6 +30,6 @@ require (
 	github.com/volatiletech/sqlboiler/v4 v4.5.0
 	github.com/volatiletech/strmangle v0.0.1
 	golang.org/x/crypto v0.0.0-20210314154223-e6e6c4f2bb5b
-	golang.org/x/sys v0.0.0-20210320140829-1e4c9ba3b0c4
-	google.golang.org/api v0.43.0
+	golang.org/x/sys v0.0.0-20210503080704-8803ae5d1324
+	google.golang.org/api v0.46.0
 )
