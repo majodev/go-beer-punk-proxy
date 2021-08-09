@@ -12,24 +12,31 @@ Examples:
 * https://github.com/cockroachdb/cockroach/tree/master/scripts
 * https://github.com/hashicorp/terraform/tree/master/scripts
 
-Please note that this scripts are not available in a final product. Use `/cmd` instead if you need to execute your script an a live environment.
+Please note that this scripts are not available in a final product. Head to `../cmd` if you need to execute your script in live environments.
 
-### `/scripts/*.go`
+The `gsdev` cli util executes this `scripts/main.go` file here and also describes all available commands available while developing a project locally. `gsdev` is made available during the `Dockerfile`'s development stage.
 
-`func`s may define shared logic used in `/scripts/**/*.go`.
+### `/scripts/cmd/*.go`
+
+`func`s may define shared logic used in `/scripts/internal/**/*.go`, the actual usable commands are defined within `/scripts/internal`.
 
 ### `// +build scripts`
 
 Any `*.go` file in all subdirectories of `/scripts/**` should specify `// +build scripts` to signal that those files are not part of of our final product. To execute any script that has this build tag, you need to specify `-tags scripts`, otherwise you will run into an error like the following (also see our `Makefile` for a reference):
 
 ```bash
-
 # Works
-go run -tags scripts scripts/modulename/modulename.go
-github.com/majodev/go-beer-punk-proxy
+go run -tags scripts scripts/main.go
+# go-starter development scripts
+# Utility commands while developing go-starter based projects.
+
+# Works (same as above)
+gsdev
+# go-starter development scripts
+# Utility commands while developing go-starter based projects.
 
 # Misses build tag "scripts"
-go run scripts/modulename/modulename.go
-package command-line-arguments
-	imports github.com/majodev/go-beer-punk-proxy/scripts: build constraints exclude all Go files in /app/scripts
+go run scripts/main.go
+# package command-line-arguments
+# 	imports github.com/majodev/go-beer-punk-proxy/scripts/cmd: build constraints exclude all Go files in /app/scripts/cmd
 ```

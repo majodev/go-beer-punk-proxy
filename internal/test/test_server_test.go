@@ -2,15 +2,20 @@ package test_test
 
 import (
 	"net/http"
+	"path/filepath"
+	"strings"
 	"testing"
 
 	"github.com/go-openapi/strfmt"
 	"github.com/go-openapi/swag"
 	"github.com/labstack/echo/v4"
 	"github.com/majodev/go-beer-punk-proxy/internal/api"
+	"github.com/majodev/go-beer-punk-proxy/internal/config"
 	"github.com/majodev/go-beer-punk-proxy/internal/test"
 	"github.com/majodev/go-beer-punk-proxy/internal/util"
+	pUtil "github.com/majodev/go-beer-punk-proxy/internal/util"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
 
 type TestRequestPayload struct {
@@ -102,6 +107,38 @@ func TestWithTestServer(t *testing.T) {
 
 			res2 := test.PerformRequest(t, s2, "POST", path, payload, nil)
 			assert.Equal(t, http.StatusNotFound, res2.Result().StatusCode)
+
+		})
+	})
+
+}
+
+func TestWithTestServerFromDump(t *testing.T) {
+	dumpFile := filepath.Join(pUtil.GetProjectRootDir(), "/test/testdata/plain.sql")
+
+	serverConfig := config.DefaultServiceConfigFromEnv()
+	dumpConfig := test.DatabaseDumpConfig{DumpFile: dumpFile, ApplyMigrations: true, ApplyTestFixtures: true}
+
+	test.WithTestServerFromDump(t, dumpConfig, func(s1 *api.Server) {
+		test.WithTestServerConfigurableFromDump(t, serverConfig, dumpConfig, func(s2 *api.Server) {
+
+			var db1Name string
+			if err := s1.DB.QueryRow("SELECT current_database();").Scan(&db1Name); err != nil {
+				t.Fatal(err)
+			}
+
+			var db2Name string
+			if err := s2.DB.QueryRow("SELECT current_database();").Scan(&db2Name); err != nil {
+				t.Fatal(err)
+			}
+
+			require.NotEqual(t, db1Name, db2Name)
+
+			// same dumpConfig settings - must be same base template hash.
+			db1Hash := strings.Split(strings.Join(strings.Split(db1Name, "integresql_test_"), ""), "_")[0]
+			db2Hash := strings.Split(strings.Join(strings.Split(db2Name, "integresql_test_"), ""), "_")[0]
+
+			require.Equal(t, db1Hash, db2Hash)
 
 		})
 	})

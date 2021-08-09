@@ -19,6 +19,10 @@ import (
 	"github.com/majodev/go-beer-punk-proxy/internal/types"
 )
 
+const (
+	HTTPHeaderCacheControl = "Cache-Control"
+)
+
 // BindAndValidateBody binds the request, parsing **only** its body (depending on the `Content-Type` request header) and performs validation
 // as enforced by the Swagger schema associated with the provided type.
 //
@@ -115,7 +119,7 @@ func BindAndValidate(c echo.Context, v runtime.Validatable, vs ...runtime.Valida
 		return validatePayload(c, v)
 	}
 
-	var reqBody []byte = nil
+	var reqBody []byte
 	var err error
 	if c.Request().Body != nil {
 		reqBody, err = ioutil.ReadAll(c.Request().Body)

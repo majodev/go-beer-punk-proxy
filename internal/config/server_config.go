@@ -28,6 +28,7 @@ type EchoServer struct {
 	EnableRequestIDMiddleware      bool
 	EnableTrailingSlashMiddleware  bool
 	EnableSecureMiddleware         bool
+	EnableCacheControlMiddleware   bool
 	SecureMiddleware               EchoServerSecureMiddleware
 }
 
@@ -38,6 +39,7 @@ type PprofServer struct {
 	RuntimeMutexProfileFraction int
 }
 
+// EchoServerSecureMiddleware represents a subset of echo's secure middleware config relevant to the app server.
 // https://github.com/labstack/echo/blob/master/middleware/secure.go
 type EchoServerSecureMiddleware struct {
 	XSSProtection         string
@@ -102,6 +104,8 @@ type Server struct {
 	FCMConfig  provider.FCMConfig
 }
 
+// DefaultServiceConfigFromEnv returns the server config as parsed from environment variables
+// and their respective defaults defined below.
 // We don't expect that ENV_VARs change while we are running our application or our tests
 // (and it would be a bad thing to do anyways with parallel testing).
 // Do NOT use os.Setenv / os.Unsetenv in tests utilizing DefaultServiceConfigFromEnv()!
@@ -133,6 +137,7 @@ func DefaultServiceConfigFromEnv() Server {
 				EnableRequestIDMiddleware:      util.GetEnvAsBool("SERVER_ECHO_ENABLE_REQUEST_ID_MIDDLEWARE", true),
 				EnableTrailingSlashMiddleware:  util.GetEnvAsBool("SERVER_ECHO_ENABLE_TRAILING_SLASH_MIDDLEWARE", true),
 				EnableSecureMiddleware:         util.GetEnvAsBool("SERVER_ECHO_ENABLE_SECURE_MIDDLEWARE", true),
+				EnableCacheControlMiddleware:   util.GetEnvAsBool("SERVER_ECHO_ENABLE_CACHE_CONTROL_MIDDLEWARE", true),
 				// see https://echo.labstack.com/middleware/secure
 				// see https://github.com/labstack/echo/blob/master/middleware/secure.go
 				SecureMiddleware: EchoServerSecureMiddleware{

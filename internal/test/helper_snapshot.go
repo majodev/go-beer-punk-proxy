@@ -15,8 +15,8 @@ import (
 )
 
 var (
-	DefaultSnapshotDirPathAbs string = filepath.Join(util.GetProjectRootDir(), "/test/testdata/snapshots")
-	UpdateGoldenGlobal        bool   = util.GetEnvAsBool("TEST_UPDATE_GOLDEN", false)
+	DefaultSnapshotDirPathAbs = filepath.Join(util.GetProjectRootDir(), "/test/testdata/snapshots")
+	UpdateGoldenGlobal        = util.GetEnvAsBool("TEST_UPDATE_GOLDEN", false)
 )
 
 var defaultReplacer = func(s string) string {
@@ -38,7 +38,7 @@ type snapshoter struct {
 	location string
 }
 
-var Snapshoter snapshoter = snapshoter{
+var Snapshoter = snapshoter{
 	update:   false,
 	label:    "",
 	replacer: defaultReplacer,
@@ -67,7 +67,7 @@ func (s snapshoter) Save(t TestingT, data ...interface{}) {
 			t.Fatal(err)
 		}
 
-		t.Fatalf("Updating snapshot: '%s'", snapshotName)
+		t.Errorf("Updating snapshot: '%s'", snapshotName)
 	}
 
 	prevSnapBytes, err := ioutil.ReadFile(snapshotAbsPath)
@@ -99,6 +99,11 @@ func (s snapshoter) Save(t TestingT, data ...interface{}) {
 
 		t.Error(diff)
 	}
+}
+
+// SaveU is a short version for .Update(true).Save(...)
+func (s snapshoter) SaveU(t TestingT, data ...interface{}) {
+	s.Update(true).Save(t, data...)
 }
 
 // Skip creates a custom replace function using a regex, this will replace any

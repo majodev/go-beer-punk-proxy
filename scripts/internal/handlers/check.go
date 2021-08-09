@@ -6,11 +6,10 @@
 // Supported args:
 // --print-all
 
-package main
+package handlers
 
 import (
 	"context"
-	"flag"
 	"fmt"
 	"strings"
 	"sync"
@@ -22,11 +21,7 @@ import (
 	"github.com/rs/zerolog"
 )
 
-func main() {
-
-	printAll := flag.Bool("print-all", false, "If specified, will print all handlers.")
-	flag.Parse()
-
+func CheckHandlers(printAll bool) {
 	// https://golangbyexample.com/print-output-text-color-console/
 	// https://gist.github.com/ik5/d8ecde700972d4378d87
 	warningLine := "\033[1;33m%s\033[0m\n"
@@ -69,7 +64,7 @@ func main() {
 			if !ok {
 				fmt.Printf(warningLine, tt.Method+" "+tt.Path+"\n    WARNING: Missing swagger spec in api/swagger.yml!")
 			} else {
-				if *printAll == true {
+				if printAll {
 					fmt.Println(tt.Method + " " + tt.Path)
 				}
 			}
@@ -124,5 +119,4 @@ func main() {
 	}
 
 	wg.Wait()
-
 }

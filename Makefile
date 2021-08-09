@@ -23,7 +23,7 @@ info-db: ##- (opt) Prints info about spec db.
 
 info-handlers: ##- (opt) Prints info about handlers.
 	@echo "[handlers]" > tmp/.info-handlers
-	@go run -tags scripts scripts/handlers/check_handlers.go --print-all >> tmp/.info-handlers
+	@gsdev handlers check --print-all >> tmp/.info-handlers
 	@echo "" >> tmp/.info-handlers
 	@cat tmp/.info-handlers
 
@@ -34,7 +34,7 @@ info-go: ##- (opt) Prints go.mod updates, module-name and current go version.
 	@go version >> tmp/.info-go
 	@cat tmp/.info-go
 
-lint: check-gen-dirs check-handlers check-embedded-modules-go-not go-lint  ##- Runs golangci-lint and make check-*.
+lint: check-gen-dirs check-script-dir check-handlers check-embedded-modules-go-not go-lint  ##- Runs golangci-lint and make check-*.
 
 # these recipies may execute in parallel
 build-pre: sql swagger ##- (opt) Runs pre-build related targets (sql, swagger, go-generate).
@@ -47,13 +47,13 @@ go-build: ##- (opt) Runs go build.
 	go build -ldflags $(LDFLAGS) -o bin/app
 
 go-lint: ##- (opt) Runs golangci-lint.
-	golangci-lint run --fast --timeout 5m
+	golangci-lint run --timeout 5m
 
 go-generate: ##- (opt) Generates the internal/api/handlers/handlers.go binding.
-	go run -tags scripts scripts/handlers/gen_handlers.go
+	gsdev handlers gen
 
 check-handlers: ##- (opt) Checks if implemented handlers match their spec (path).
-	go run -tags scripts scripts/handlers/check_handlers.go
+	gsdev handlers check
 
 # https://golang.org/pkg/cmd/go/internal/generate/
 # To convey to humans and machine tools that code is generated,
@@ -64,6 +64,10 @@ check-gen-dirs: ##- (opt) Ensures internal/models|types only hold generated file
 	@echo "make check-gen-dirs"
 	@grep -R -L '^// Code generated .* DO NOT EDIT\.$$' --exclude ".DS_Store" ./internal/types/ && echo "Error: Non generated file(s) in ./internal/types!" && exit 1 || exit 0
 	@grep -R -L '^// Code generated .* DO NOT EDIT\.$$' --exclude ".DS_Store" ./internal/models/ && echo "Error: Non generated file(s) in ./internal/models!" && && exit 1 || exit 0
+
+check-script-dir: ##- (opt) Ensures all scripts/**/*.go files have the "// +build scripts" build tag set.
+	@echo "make check-script-dir"
+	@grep -R --include=*.go -L '// +build scripts' ./scripts && echo "Error: Found unset '// +build scripts' in ./scripts/**/*.go!" && exit 1 || exit 0
 
 # https://github.com/gotestyourself/gotestsum#format 
 # w/o cache https://github.com/golang/go/issues/24573 - see "go help testflag"
@@ -99,6 +103,14 @@ get-go-outdated-modules: ##- (opt) Prints outdated (direct) go modules (from go.
 
 watch-tests: ##- Watches *.go files and runs package tests on modifications.
 	gotestsum --format testname --watch -- -race -count=1
+
+test-scripts: ##- (opt) Run scripts tests (gsdev), output by package, print coverage.
+	@$(MAKE) go-test-scripts-by-pkg
+	@printf "coverage "
+	@go tool cover -func=/tmp/coverage-scripts.out | tail -n 1 | awk '{$$1=$$1;print}'
+
+go-test-scripts-by-pkg: ##- (opt) Run scripts tests (gsdev), output by package.
+	gotestsum --format pkgname-and-test-fails --jsonfile /tmp/test.log -- $$(go list -tags scripts ./... | grep "${GO_MODULE_NAME}/scripts") -tags scripts -race -cover -count=1 -coverprofile=/tmp/coverage-scripts.out ./...
 
 ### -----------------------
 # --- Initializing
@@ -161,7 +173,9 @@ sql-boiler: ##- (opt) Runs sql-boiler introspects the spec db to generate intern
 
 sql-format: ##- (opt) Formats all *.sql files.
 	@echo "make sql-format"
-	@find ${PWD} -name ".*" -prune -o -type f -iname "*.sql" -print \
+	@find ${PWD} -path "*/tmp/*" -prune -name ".*" -prune -o -type f -iname "*.sql" -print \
+		| grep --invert "/app/dumps/" \
+		| grep --invert "/app/test/" \
 		| xargs -i pg_format {} -o {}
 
 sql-check-files: sql-check-syntax sql-check-migrations-unnecessary-null ##- (opt) Check syntax and unnecessary use of NULL keyword.
@@ -170,7 +184,9 @@ sql-check-files: sql-check-syntax sql-check-migrations-unnecessary-null ##- (opt
 # https://stackoverflow.com/questions/8271606/postgresql-syntax-check-without-running-the-query
 sql-check-syntax: ##- (opt) Checks syntax of all *.sql files.
 	@echo "make sql-check-syntax"
-	@find ${PWD} -name ".*" -prune -o -type f -iname "*.sql" -print \
+	@find ${PWD} -path "*/tmp/*" -prune -name ".*" -prune -path ./dumps -prune -false -o -type f -iname "*.sql" -print \
+		| grep --invert "/app/dumps/" \
+		| grep --invert "/app/test/" \
 		| xargs -i sed '1s#^#DO $$SYNTAX_CHECK$$ BEGIN RETURN;#; $$aEND; $$SYNTAX_CHECK$$;' {} \
 		| psql -d postgres --quiet -v ON_ERROR_STOP=1
 
@@ -198,6 +214,12 @@ sql-check-structure-default-zero-values: ##- (opt) Ensures spec database objects
 	@echo "make sql-check-structure-default-zero-values"
 	@cat scripts/sql/default_zero_values.sql | psql -qtz0 --no-align -d "${PSQL_DBNAME}" -v ON_ERROR_STOP=1
 
+dumpfile := /app/dumps/development_$(shell date '+%Y-%m-%d-%H-%M-%S').sql
+sql-dump: ##- Dumps the development database to '/app/dumps/development_YYYY-MM-DD-hh-mm-ss.sql'.
+	@mkdir -p /app/dumps
+	@pg_dump development --format=p --clean --if-exists > $(dumpfile)
+	@echo "Dumped '$(dumpfile)'. Use 'cat $(dumpfile) | psql' to restore"
+
 watch-sql: ##- Watches *.sql files in /migrations and runs 'make sql-regenerate' on modifications.
 	@echo Watching /migrations. Use Ctrl-c to stop a run or exit.
 	watchexec -p -w migrations --exts sql $(MAKE) sql-regenerate
@@ -220,7 +242,7 @@ swagger-concat: ##- (opt) Regenerates api/swagger.yml based on api/paths/*.
 		--output=api/tmp/tmp.yml \
 		--format=yaml \
 		--keep-spec-order \
-		api/main.yml api/paths/* \
+		api/config/main.yml api/paths/* \
 		-q
 	@swagger flatten api/tmp/tmp.yml \
 		--output=api/swagger.yml \
@@ -255,6 +277,8 @@ watch-swagger: ##- Watches *.yml|yaml|gotmpl files in /api and runs 'make swagge
 # --- Binary checks
 ### -----------------------
 
+# Got license issues with some dependencies? Provide a custom lichen --config
+# see https://github.com/uw-labs/lichen#config 
 get-licenses: ##- Prints licenses of embedded modules in the compiled bin/app.
 	lichen bin/app
 
@@ -351,7 +375,7 @@ help-all: ##- Show all make targets.
 # go module name (as in go.mod)
 GO_MODULE_NAME = $(eval GO_MODULE_NAME := $$(shell \
 	(mkdir -p tmp 2> /dev/null && cat tmp/.modulename 2> /dev/null) \
-	|| (go run -tags scripts scripts/modulename/modulename.go 2> /dev/null | tee tmp/.modulename) || echo "unknown" \
+	|| (gsdev modulename 2> /dev/null | tee tmp/.modulename) || echo "unknown" \
 ))$(GO_MODULE_NAME)
 
 # https://medium.com/the-go-journey/adding-version-information-to-go-binaries-e1b79878f6f2
@@ -382,7 +406,7 @@ LDFLAGS = $(eval LDFLAGS := "\
 
 # https://unix.stackexchange.com/questions/153763/dont-stop-makeing-if-a-command-fails-but-check-exit-status
 # https://www.gnu.org/software/make/manual/html_node/One-Shell.html
-# required to ensure make fails if one recipe fails (even on parallel jobs)
+# required to ensure make fails if one recipe fails (even on parallel jobs) and on pipefails
 .ONESHELL:
 SHELL = /bin/bash
-.SHELLFLAGS = -ec
+.SHELLFLAGS = -cEeuo pipefail

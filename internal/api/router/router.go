@@ -107,6 +107,12 @@ func Init(s *api.Server) {
 		log.Warn().Msg("Disabling CORS middleware due to environment config")
 	}
 
+	if s.Config.Echo.EnableCacheControlMiddleware {
+		s.Echo.Use(middleware.CacheControl())
+	} else {
+		log.Warn().Msg("Disabling cache control middleware due to environment config")
+	}
+
 	if s.Config.Pprof.Enable {
 
 		pprofAuthMiddleware := middleware.Noop()
@@ -147,7 +153,7 @@ func Init(s *api.Server) {
 		// Unsecured base group available at /**
 		Root: s.Echo.Group(""),
 
-		// Management endpoints, secured by key auth (query param), available at /-/**
+		// Management endpoints, uncacheable, secured by key auth (query param), available at /-/**
 		Management: s.Echo.Group("/-", echoMiddleware.KeyAuthWithConfig(echoMiddleware.KeyAuthConfig{
 			KeyLookup: "query:mgmt-secret",
 			Validator: func(key string, c echo.Context) (bool, error) {
@@ -160,7 +166,7 @@ func Init(s *api.Server) {
 				}
 				return false
 			},
-		})),
+		}), middleware.NoCache()),
 
 		// OAuth2, unsecured or secured by bearer auth, available at /api/v1/auth/**
 		APIV1Auth: s.Echo.Group("/api/v1/auth", middleware.AuthWithConfig(middleware.AuthConfig{
