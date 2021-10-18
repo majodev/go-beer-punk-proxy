@@ -33,7 +33,7 @@ jobs:
       mailhog:
         image: mailhog/mailhog
     steps:
-      - uses: actions/checkout@v2.3.4
+      - uses: actions/checkout@v2.3.5
       # Setup docker buildx caching and building
       # based on: https://github.com/dtinth/github-actions-docker-layer-caching-poc/pull/1/files
       # also see: 
@@ -80,6 +80,6 @@ jobs:
     runs-on: ubuntu-latest
     container: swaggerapi/swagger-codegen-cli
     steps:
-      - uses: actions/checkout@v2.3.4
+      - uses: actions/checkout@v2.3.5
       - name: run the main swagger.yml validation
         run: java -jar /opt/swagger-codegen-cli/swagger-codegen-cli.jar validate -i ./api/swagger.yml

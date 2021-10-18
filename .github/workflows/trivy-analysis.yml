@@ -15,7 +15,7 @@ jobs:
     runs-on: ubuntu-18.04
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2.3.4
+        uses: actions/checkout@v2.3.5
 
       # Setup docker buildx caching and building
       # based on: https://github.com/dtinth/github-actions-docker-layer-caching-poc/pull/1/files
