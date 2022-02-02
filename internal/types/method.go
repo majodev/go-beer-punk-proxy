@@ -60,6 +60,8 @@ func (m *Method) validateFermentation(formats strfmt.Registry) error {
 		if err := m.Fermentation.Validate(formats); err != nil {
 			if ve, ok := err.(*errors.Validation); ok {
 				return ve.ValidateName("fermentation")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("fermentation")
 			}
 			return err
 		}
@@ -83,6 +85,8 @@ func (m *Method) validateMashTemp(formats strfmt.Registry) error {
 			if err := m.MashTemp[i].Validate(formats); err != nil {
 				if ve, ok := err.(*errors.Validation); ok {
 					return ve.ValidateName("mash_temp" + "." + strconv.Itoa(i))
+				} else if ce, ok := err.(*errors.CompositeError); ok {
+					return ce.ValidateName("mash_temp" + "." + strconv.Itoa(i))
 				}
 				return err
 			}
@@ -117,6 +121,8 @@ func (m *Method) contextValidateFermentation(ctx context.Context, formats strfmt
 		if err := m.Fermentation.ContextValidate(ctx, formats); err != nil {
 			if ve, ok := err.(*errors.Validation); ok {
 				return ve.ValidateName("fermentation")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("fermentation")
 			}
 			return err
 		}
@@ -133,6 +139,8 @@ func (m *Method) contextValidateMashTemp(ctx context.Context, formats strfmt.Reg
 			if err := m.MashTemp[i].ContextValidate(ctx, formats); err != nil {
 				if ve, ok := err.(*errors.Validation); ok {
 					return ve.ValidateName("mash_temp" + "." + strconv.Itoa(i))
+				} else if ce, ok := err.(*errors.CompositeError); ok {
+					return ce.ValidateName("mash_temp" + "." + strconv.Itoa(i))
 				}
 				return err
 			}

@@ -76,6 +76,8 @@ func (m *Hop) validateAdd(formats strfmt.Registry) error {
 		if err := m.Add.Validate(formats); err != nil {
 			if ve, ok := err.(*errors.Validation); ok {
 				return ve.ValidateName("add")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("add")
 			}
 			return err
 		}
@@ -94,6 +96,8 @@ func (m *Hop) validateAmount(formats strfmt.Registry) error {
 		if err := m.Amount.Validate(formats); err != nil {
 			if ve, ok := err.(*errors.Validation); ok {
 				return ve.ValidateName("amount")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("amount")
 			}
 			return err
 		}
@@ -116,6 +120,8 @@ func (m *Hop) validateAttribute(formats strfmt.Registry) error {
 		if err := m.Attribute.Validate(formats); err != nil {
 			if ve, ok := err.(*errors.Validation); ok {
 				return ve.ValidateName("attribute")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("attribute")
 			}
 			return err
 		}
@@ -161,6 +167,8 @@ func (m *Hop) contextValidateAdd(ctx context.Context, formats strfmt.Registry) e
 		if err := m.Add.ContextValidate(ctx, formats); err != nil {
 			if ve, ok := err.(*errors.Validation); ok {
 				return ve.ValidateName("add")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("add")
 			}
 			return err
 		}
@@ -175,6 +183,8 @@ func (m *Hop) contextValidateAmount(ctx context.Context, formats strfmt.Registry
 		if err := m.Amount.ContextValidate(ctx, formats); err != nil {
 			if ve, ok := err.(*errors.Validation); ok {
 				return ve.ValidateName("amount")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("amount")
 			}
 			return err
 		}
@@ -189,6 +199,8 @@ func (m *Hop) contextValidateAttribute(ctx context.Context, formats strfmt.Regis
 		if err := m.Attribute.ContextValidate(ctx, formats); err != nil {
 			if ve, ok := err.(*errors.Validation); ok {
 				return ve.ValidateName("attribute")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("attribute")
 			}
 			return err
 		}

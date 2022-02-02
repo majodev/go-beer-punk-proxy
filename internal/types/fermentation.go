@@ -48,6 +48,8 @@ func (m *Fermentation) validateTemp(formats strfmt.Registry) error {
 		if err := m.Temp.Validate(formats); err != nil {
 			if ve, ok := err.(*errors.Validation); ok {
 				return ve.ValidateName("temp")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("temp")
 			}
 			return err
 		}
@@ -76,6 +78,8 @@ func (m *Fermentation) contextValidateTemp(ctx context.Context, formats strfmt.R
 		if err := m.Temp.ContextValidate(ctx, formats); err != nil {
 			if ve, ok := err.(*errors.Validation); ok {
 				return ve.ValidateName("temp")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("temp")
 			}
 			return err
 		}

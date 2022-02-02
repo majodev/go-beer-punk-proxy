@@ -2,25 +2,128 @@
 
 - All notable changes to this project will be documented in this file.
 - The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
-- We **do not follow [semantic versioning](https://semver.org/)**.
-- There are **no git tags**. 
-- All changes are solely **tracked by date**. 
+- We do not follow [semantic versioning](https://semver.org/).
+- All changes are solely **tracked by date** and have a git tag available (from 2021-10-19 onwards):
+  - format `go-starter-YYYY-MM-DD`
+  - e.g. [`go-starter-2021-10-19`](https://github.com/allaboutapps/go-starter/releases/tag/go-starter-2021-10-19) 
 - The latest `master` is considered **stable** and should be periodically merged into our customer projects.
 
 ## Unreleased
+
+## 2022-02-02
+
 ### Changed
 
-## 2021-08-06
+- Upgrades to [go-swagger](https://github.com/go-swagger/go-swagger) from to v0.26.1 to [v0.29.0](https://github.com/go-swagger/go-swagger/releases/tag/v0.29.0) (development stage only, requires `./docker-helper.sh --rebuild`). Includes the following `go.mod` upgrades:
+  - [github.com/go-openapi/runtime](https://github.com/go-openapi/runtime) from v0.19.31 to v0.22.0
+  - [github.com/go-openapi/strfmt](https://github.com/go-openapi/strfmt) from v0.20.2 to v0.21.1
+  - [github.com/go-openapi/validate](https://github.com/go-openapi/validate) from v0.20.2 to v0.20.3
+  - [github.com/go-openapi/errors](https://github.com/go-openapi/errors) from v0.20.1 to v0.20.2
+  - [github.com/go-openapi/swag](https://github.com/go-openapi/swag) from v0.19.15 to v0.21.1
+- Adds `yq` ([yq: a lightweight and portable command-line YAML processor](https://github.com/mikefarah/yq)) to our `Dockerfile` (development stage only, requires `./docker-helper.sh --rebuild`).
+- Adds `make swagger-lint-ref-siblings` which is now executed as part of the `make build` (and `make swagger`) pipeline.
+  - Any sibling elements of a Swagger `$ref` are ignored.
+  - We have seen several misuses of `$ref` in our projects causing weird merge/flatten behaviors, thus we now lint for this case explicitly.
+  - Having `$ref` and sibling elements (e.g. `required`, `example`, ...) is unsupported by [OpenAPI v2: $ref and Sibling Elements](https://swagger.io/docs/specification/using-ref/) itself and the [JSON Reference specification](https://datatracker.ietf.org/doc/html/rfc3986) itself.
+  - To mitigate these errors, either expand the referenced element (fully remove `$ref`) or create a new element including your custom siblings elements and `$ref` this new one.
+- Fix schema visualization generation guide in `docs/schemacrawler/README.md`
+
+## 2021-12-14
+
 ### Changed
+- Add i18n service wrapping `go-i18n` package by nicksnyder.
+  - Allows parsing of Accept-Language header and language string.
+  - Support for templating using go templating language in message values.
+  - Support for [CLDR plural keys](https://cldr.unicode.org/index/cldr-spec/plural-rules)
+  - Added environment variables to configure i18n service
+    - `SERVER_I18N_DEFAULT_LANGUAGE` - set default language for i18n service
+    - `SERVER_I18N_BUNDLE_DIR_ABS` - set directory of i81n messages, available languages are automatically configured by the files present in the folder
+
+## 2021-11-29
+
+### Changed
+
+- The `integresql` service previously bound its port (`5000`) to the host machine. As this conflicts with newer macOS releases and is not necessary for the development workflow, the port is now only exposed to the linked services.
+
+## 2021-10-22
+
+### Changed
+
+- Fixes minor `Makefile` typos.
+- New go-starter releases are now git tagged (starting from the previous release `go-starter-2021-10-19` onwards). See [FAQ: What's the process of a new go-starter release?](https://github.com/allaboutapps/go-starter/wiki/FAQ#whats-the-process-of-a-new-go-starter-release)
+- You may now specify a **specific** tag/branch/commit from the upstream [go-starter](https://github.com/allaboutapps/go-starter) project while running `make git-fetch-go-starter`, `make git-compare-go-starter` and `make git-merge-go-starter`. This will especially come in handy if you want to do a multi-phased merge (for projects that haven't been updated in a long time):
+  - Merge with the latest: `make git-merge-go-starter`
+  - Merge with a specific tag, e.g. the tag [`go-starter-2021-10-19`](https://github.com/allaboutapps/go-starter/releases/tag/go-starter-2021-10-19): `GIT_GO_STARTER_TARGET=go-starter-2021-10-19 make git-merge-go-starter`
+  - Merge with a specific branch, e.g. the branch [`mr/housekeeping`](https://github.com/allaboutapps/go-starter/tree/mr/housekeeping): `GIT_GO_STARTER_TARGET=go-starter/mr/housekeeping make git-merge-go-starter` (heads up! it's `go-starter/<branchname>`)
+  - Merge with a specific commit, e.g. the commit [`e85bedb94c3562602bc23d2bfd09fca3b13d1e02`](https://github.com/allaboutapps/go-starter/commit/e85bedb94c3562602bc23d2bfd09fca3b13d1e02): `GIT_GO_STARTER_TARGET=e85bedb94c3562602bc23d2bfd09fca3b13d1e02 make git-merge-go-starter`
+- The primary GitHub Action pipeline `.github/workflows/build-test.yml` has been synced to include most validation tasks from our internal `.drone.yml` pipeline. Furthermore:
+  - Avoid `Build & Test` GitHub Action running twice (on `push` and on `pull_request`).
+  - Add trivy scan to our base Build & Test pipeline (as we know also build and test the `app` target docker image).
+  - Our GitHub Action pipeline will no longer attempt to cache the previously built Docker images by other pipelines, as extracting/restoring from cache (docker buildx) typically takes **longer** than fully rebuilding the whole image. We will reinvestigate caching mechanisms in the future if GitHub Actions provides a speedier and official integration for Docker images.
+
+## 2021-10-19
+
+### Changed
+
+- **BREAKING** Upgrades to [Go 1.17.1](https://golang.org/doc/go1.17) `golang:1.17.1-buster`
+  - Switch to `//go:build <tag>` from `// +build <tag>`.
+  - Migrates `go.mod` via `go mod tidy -go=1.17` (pruned module graphs).
+  - Do the following to upgrade:
+    1. `make git-merge-go-starter`
+    2. `./docker-helper --rebuild`
+    3. Manually remove the new **second** `require` block (with all the `// indirect` modules) within your `go.mod`
+    4. Execute `go mod tidy -go=1.17` once so the **second** `require` block appears again.
+    5. Find `// +build <tag>` and replace it with `//go:build <tag>`.
+    6. `make all`.
+    7. Recheck your `go.mod` that the newly added `// indirect` transitive dependencies are the proper version as you were previously using (e.g. via the output from `make get-licenses` and `make get-embedded-modules`). Feel free to move any `// indirect` tagged dependencies in your **first** `require` block to the **second** block. This is where they should live.
+- **BREAKING** You now need to take special care when it comes to parsing **semicolons** (`;`) in **query strings** via `net/url` and `net/http` from Go >1.17!
+  - Anything before the semicolon will now be stripped. e.g. `example?a=1;b=2&c=3` would have returned `map[a:[1] b:[2] c:[3]]`, while now it returns `map[c:[3]]`
+  - See [Go 1.17 URL query parsing](https://golang.org/doc/go1.17#semicolons).
+  - You may need to manually migrate your handlers/tests regarding this new default handling.
+
+## 2021-09-27
+
+### Changed
+
+- Added `make test-update-golden` for easily refreshing **all** golden files / snapshot tests (`y + ENTER` confirmation).
+- Upgrades [golangci-lint](https://github.com/golangci/golangci-lint) from `v1.41.1` to [`v1.42.1`](https://github.com/golangci/golangci-lint/releases/tag/v1.42.1) (for reference [`v1.42.0`](https://github.com/golangci/golangci-lint/releases/tag/v1.42.0)).
+- Bump github.com/go-openapi/strfmt from [0.20.1 to 0.20.2](https://github.com/go-openapi/strfmt/compare/v0.20.1...v0.20.2)
+- Bump github.com/go-openapi/errors from [0.20.0 to 0.20.1](https://github.com/go-openapi/errors/compare/v0.20.0...v0.20.1)
+- Bump github.com/go-openapi/runtime from [0.19.29 to 0.19.31](https://github.com/go-openapi/runtime/compare/v0.19.29...v0.19.31)
+- Bump github.com/rs/zerolog from [1.23.0 to 1.25.0](https://github.com/rs/zerolog/compare/v1.23.0...v1.25.0)
+- Bump google.golang.org/api from [0.52.0 to 0.57.0](https://github.com/allaboutapps/go-starter/pull/124)
+- Bump github.com/lib/pq from [v1.10.2 to v1.10.3](https://github.com/lib/pq/releases/tag/v1.10.3)
+- Bump github.com/spf13/viper from [1.8.1 to v1.9.0](https://github.com/spf13/viper/releases/tag/v1.9.0)
+- Bump github.com/labstack/echo from [4.5.0 to v4.6.1](https://github.com/labstack/echo/compare/v4.5.0...v4.6.1)
+- Update golang.org/x/crypto and golang.org/x/sys
+
+## 2021-08-17
+
+### Changed
+
+- **Hotfix**: We will pin the `Dockerfile` development and builder stage to `golang:1.16.7-buster` (+ `-buster`) for now, as currently the [new debian bullseye release within the go official docker images](https://github.com/docker-library/golang/commit/48a7371ed6055a97a10adb0b75756192ad5f1c97) breaks some tooling. The upgrade to debian bullseye and Go 1.17 will happen ~simultaneously~ **separately** within go-starter in the following weeks. 
+
+## 2021-08-16
+
+### Changed
+
+- remove ioutil (https://golang.org/doc/go1.16#ioutil)
+
+## 2021-08-06
+
+### Changed
+
 - Bump golang from 1.16.6 to [1.16.7](https://github.com/golang/go/issues?q=milestone%3AGo1.16.7+label%3ACherryPickApproved) (requires `./docker-helper.sh --rebuild`).
 - Adds `util.GetEnvAsStringArrTrimmed` and minor `util` test coverage upgrades.
 
 ## 2021-08-04
+
 ### Changed
+
 - `README.md` badges for go-starter.
 - Fix some misspellings of English words within `internal/test/*.go` comments.
 - Upgrades
-  - Bump `github.com/labstack/echo/v4` from 4.4.0 to [4.5.0](https://github.com/labstack/echo/blob/master/CHANGELOG.md#v450---2021-08-01): 
+  - Bump `github.com/labstack/echo/v4` from 4.4.0 to [4.5.0](https://github.com/labstack/echo/blob/master/CHANGELOG.md#v450---2021-08-01):
     - Switch from `github.com/dgrijalva/jwt-go` to [`github.com/golang-jwt/jwt`](https://github.com/golang-jwt/jwt) to mitigate [CVE-2020-26160](https://nvd.nist.gov/vuln/detail/CVE-2020-26160).
     - Note that it might take some time until the former dep fully leaves our dependency graph, as it is also a transitive dependency of various versions of [`github.com/spf13/viper`](https://github.com/spf13/viper/issues/997).
     - However, even though this functionality was never used by go-starter, this change fixes an important part: The original `github.com/dgrijalva/jwt-go` is no longer included in the **final `app` binary**, it is fully replaced by `github.com/golang-jwt/jwt`.
@@ -28,7 +131,9 @@
     - **Breaking**: If you have actually directly depended upon `github.com/dgrijalva/jwt-go`, please switch to `github.com/golang-jwt/jwt` via the following command: `find -type f -name "*.go" -exec sed -i "s/dgrijalva\/jwt-go/golang-jwt\/jwt/g" {} \;`
 
 ## 2021-07-30
+
 ### Changed
+
 - Upgrades:
   - Bump golang from 1.16.5 to [1.16.6](https://groups.google.com/g/golang-announce/c/n9FxMelZGAQ)
   - Bump github.com/labstack/echo/v4 from 4.3.0 to [4.4.0](https://github.com/labstack/echo/blob/master/CHANGELOG.md) (adds `binder.BindHeaders` support, not affecting our goswagger `runtime.Validatable` bind helpers)
@@ -40,11 +145,15 @@
   - Bump golang.org/x/crypto to `v0.0.0-20210711020723-a769d52b0f97`
 
 ## 2021-07-29
+
 ### Changed
+
 - Fixed `Makefile` has disregarded `pipefail`s in executed targets (e.g. `make sql-spec-migrate` previously returned exit code `0` even if there were migration errors as its output was piped internally). We now set `-cEeuo pipefail` for make's shell args, preventing these issues.
 
 ## 2021-06-30
+
 ### Changed
+
 - **BREAKING** Switched from [`golint`](https://github.com/golang/lint) to [`revive`](https://github.com/mgechev/revive)
   - [`golint` is deprecated](https://github.com/golang/go/issues/38968).
   - [`revive`](https://github.com/mgechev/revive) is considered to be a drop-in replacement for `golint`, however this change still might lead to breaking changes in your codebase.
@@ -79,10 +188,12 @@
   - Added VScode launch task for updating all snapshots in a single test file
 
 ## 2021-06-29
+
 ### Changed
+
 - We now directly bake the `gsdev` cli "bridge" (it actually just runs `go run -tags scripts /app/scripts/main.go "$@"`) into the `development` stage of our `Dockerfile` and create it at `/usr/bin/gsdev` (requires `./docker-helper.sh --rebuild`).
   - `gsdev` was previously symlinked to `/app/bin` from `/app/scripts/gsdev` (within the projects' workspace) and `chmod +x` via the `Makefile` during `init`.
-  - However this lead to problems with WSL2 VSCode related development setups (always dirty git workspaces as WSL2 tries to prevent `+x` flags). 
+  - However this lead to problems with WSL2 VSCode related development setups (always dirty git workspaces as WSL2 tries to prevent `+x` flags).
   - **BREAKING** encountered at **2021-06-30**: Upgrading your project via `make git-merge-go-starter` if you already have installed our previous `gsdev` approach from **2021-06-22** may require additional steps:
     - It might be necessary to unlink the current `gsdev` symlink residing at `/app/bin/gsdev` before merging up (as this symlinked file will no longer exist)!
     - Do this by issuing `rm -f /app/bin/gsdev` which will remove the symlink which pointed to the previous (now gone bash script) at `/app/scripts/gsdev`.
@@ -92,7 +203,9 @@
       - `[CTRL + c]` to return to being the `development` user within your container.
 
 ## 2021-06-24
+
 ### Changed
+
 - Introduces GitHub Actions docker layer caching via docker buildx. For details see `.github/workflows/build-test.yml`.
 - Upgrades:
   - Bump golang from 1.16.4 to [1.16.5](https://groups.google.com/g/golang-announce/c/RgCMkAEQjSI/m/r_EP-NlKBgAJ)
@@ -108,7 +221,9 @@
 - Fixes linting within `/scripts/**/*.go`, now activated by default.
 
 ## 2021-06-22
+
 ### Changed
+
 - Development scripts are no longer called via `go run [script]` but via `gsdev`:
   - The `gsdev` cli is our new entrypoint for development workflow specific scripts, these scripts are not available in the final `app` binary.
   - All previous `go run` scripts have been moved to their respective `/scripts/cmd` cli entrypoint + internal implementation within `/scripts/internal/**`.
@@ -119,15 +234,20 @@
 - VSCode's `.devcontainer/devcontainer.json` now defines that the go tooling must use the `scripts` build tag for its IntelliSense. This is neccessary to still get proper code-completion when modifying resources at `/scripts/**/*.go`. You may need to reattach VSCode and/or run `./docker-helper.sh --rebuild`.
 
 ### Added
+
 - Scaffolding tool to quickly generate generic CRUD endpoint stubs. Usage: `gsdev scaffold [resource name] [flags]`, also see `gsdev scaffold --help`.
 
 ## 2021-05-26
+
 ### Changed
+
 - Scans for [CVE-2020-26160](https://nvd.nist.gov/vuln/detail/CVE-2020-26160) also match for our final `app` binary, however, we do not use `github.com/dgrijalva/jwt-go` as part of our auth logic. This dependency is mostly here because of child dependencies, that yet need to upgrade to `>=v4.0.0`. Therefore, we currently disable this CVE for scans in this project (via `.trivyignore`).
 - Upgrades `Dockerfile`: [`watchexec@v1.16.1`](https://github.com/watchexec/watchexec/releases/tag/cli-v1.16.1), [`lichen@v0.1.4`](https://github.com/uw-labs/lichen/releases/tag/v0.1.4) (requires `./docker-helper.sh --rebuild`).
 
 ## 2021-05-18
+
 ### Changed
+
 - Upgraded `Dockerfile` to `golang:1.16.4`, `gotestsum@v1.6.4`, `golangci-lint@v1.40.1`, `watchexec@v1.16.0` (requires `./docker-helper.sh --rebuild`).
 - Upgraded `go.mod`:
   - [github.com/labstack/echo/v4@v4.3.0](https://github.com/labstack/echo/releases/tag/v4.3.0)
@@ -140,85 +260,107 @@
   - `golang.org/x/sys@v0.0.0-20210514084401-e8d321eab015`
   - [google.golang.org/api@v0.46.0](https://github.com/googleapis/google-api-go-client/releases/tag/v0.46.0)
 - GitHub Actions:
-  -  Pin to `actions/checkout@v2.3.4`.
-  -  Remove unnecessary `git checkout HEAD^2` in CodeQL step (Code Scanning recommends analyzing the merge commit for best results).
-  -  Limit trivy and codeQL actions to `push` against `master` and `pull_request` against `master` to overcome read-only access workflow errors.
+  - Pin to `actions/checkout@v2.3.4`.
+  - Remove unnecessary `git checkout HEAD^2` in CodeQL step (Code Scanning recommends analyzing the merge commit for best results).
+  - Limit trivy and codeQL actions to `push` against `master` and `pull_request` against `master` to overcome read-only access workflow errors.
 
 ## 2021-04-27
+
 ### Added
+
 - Adds `test.WithTestDatabaseFromDump*`, `test.WithTestServerFromDump` methods for writing tests based on a database dump file that needs to be imported first:
   - We dynamically setup IntegreSQL pools for all combinations passed through a `test.DatabaseDumpConfig{}` object:
     - `DumpFile string` is required, absolute path to dump file
     - `ApplyMigrations bool` optional, default `false`, automigrate after installing the dump
     - `ApplyTestFixtures bool` optional, default `false`, import fixtures after (migrating) installing the dump
   - `test.ApplyDump(ctx context.Context, t *testing.T, db *sql.DB, dumpFile string) error` may be used to apply a dump to an existing database connection.
-  - As we have dedicated IntegreSQL pools for each combination, testing performance should be on par with the default IntegreSQL database pool. 
-- Adds `test.WithTestDatabaseEmpty*` methods for writing tests based on an empty database (also a dedicated IntegreSQL pool). 
+  - As we have dedicated IntegreSQL pools for each combination, testing performance should be on par with the default IntegreSQL database pool.
+- Adds `test.WithTestDatabaseEmpty*` methods for writing tests based on an empty database (also a dedicated IntegreSQL pool).
 - Adds context aware `test.WithTest*Context` methods reusing the provided `context.Context` (first arg).
 - Adds `make sql-dump` command to easily create a dump of the local `development` database to `/app/dumps/development_YYYY-MM-DD-hh-mm-ss.sql` (.gitignored).
 
 ### Changed
+
 - `test.ApplyMigrations(t *testing.T, db *sql.DB) (countMigrations int, err error)` is now public (e.g. for usage with `test.WithTestDatabaseEmpty*` or `test.WithTestDatabaseFromDump*`)
 - `test.ApplyTestFixtures(ctx context.Context, t *testing.T, db *sql.DB) (countFixtures int, err error)` is now public (e.g. for usage with `test.WithTestDatabaseEmpty*` or `test.WithTestDatabaseFromDump*`)
-- `internal/test/test_database_test.go` and `/app/internal/test/test_server_test.go` were massively refactored to allow for better extensibility later on (non breaking, all method signatures are backward-compatible).  
+- `internal/test/test_database_test.go` and `/app/internal/test/test_server_test.go` were massively refactored to allow for better extensibility later on (non breaking, all method signatures are backward-compatible).
 
 ## 2021-04-12
+
 ### Added
+
 - Adds echo `NoCache` middleware: Use `middleware.NoCache()` and `middleware.NoCacheWithConfig(Skipper)` to explicitly force browsers to never cache calls to these handlers/groups.
 
 ### Changed
+
 - `/swagger.yml` and `/-/*` now explicity set no-cache headers by default, forcing browsers to re-execute calls each and every time.
 - Upgrade [watchexec@v1.15.0](https://github.com/watchexec/watchexec/releases/tag/1.15.0) (requires `./docker-helper.sh --rebuild`).
 
 ## 2021-04-08
+
 ### Added
-- Live-Reload for our swagger-ui is now available out of the box: 
+
+- Live-Reload for our swagger-ui is now available out of the box:
   - [allaboutapps/browser-sync](https://hub.docker.com/r/allaboutapps/browser-sync) acts as proxy at [localhost:8081](http://localhost:8081/).
   - Requires `./docker-helper.sh --up`.
   - Best used in combination with `make watch-swagger` (still refreshes `make all` or `make swagger` of course).
 
 ### Changed
+
 - Upgrades to [swaggerapi/swagger-ui:v3.46.0](https://github.com/swagger-api/swagger-ui/tree/v3.46.0) from [swaggerapi/swagger-ui:v3.28.0](https://github.com/swagger-api/swagger-ui/compare/v3.28.0...v3.46.0)
 - Upgrades to [github.com/labstack/echo@v4.2.2](https://github.com/labstack/echo/releases/tag/v4.2.2)
 - `golang.org/x/crypto v0.0.0-20210322153248-0c34fe9e7dc2`
 - Upgrades to [google.golang.org/api@v0.44.0](https://github.com/googleapis/google-api-go-client/releases/tag/v0.44.0)
 
 ## 2021-04-07
+
 ### Changed
--  Moved `/api/main.yml` to `/api/config/main.yml` to overcome path resolve issues (`../definitions`) with the VSCode [42crunch.vscode-openapi](https://github.com/42Crunch/vscode-openapi) extension (auto-included in our devContainer) and our go-swagger concat behaviour. 
+
+- Moved `/api/main.yml` to `/api/config/main.yml` to overcome path resolve issues (`../definitions`) with the VSCode [42crunch.vscode-openapi](https://github.com/42Crunch/vscode-openapi) extension (auto-included in our devContainer) and our go-swagger concat behaviour.
 - Updated [api/README.md](https://github.com/allaboutapps/go-starter/blob/master/api/README.md) information about `/api/swagger.yml` generation logic and changed `make swagger-concat` accordingly
 
 ## 2021-04-02
+
 ### Changed
+
 - Bump [golang from v1.16.2 to v1.16.3](https://github.com/golang/go/issues?q=milestone%3AGo1.16.3+label%3ACherryPickApproved) (requires `./docker-helper.sh --rebuild`).
 
 ## 2021-04-01
+
 ### Changed
+
 - Bump golang.org/x/crypto@v0.0.0-20210322153248-0c34fe9e7dc2
 - Bump golang.org/x/sys@v0.0.0-20210331175145-43e1dd70ce54
 - Bump [github.com/go-openapi/swag@v0.19.15](https://github.com/allaboutapps/go-starter/pull/71)
 - Bump [github.com/go-openapi/strfmt@v0.20.1](https://github.com/allaboutapps/go-starter/pull/70)
 
 ## 2021-03-30
+
 ### Changed
+
 - Bump [github.com/gotestyourself/gotestsum@v1.6.3](https://github.com/gotestyourself/gotestsum/releases/tag/v1.6.3) (requires `./docker-helper.sh --rebuild`).
 
 ## 2021-03-26
+
 ### Changed
+
 - Bump [golangci-lint@v1.39.0](https://github.com/golangci/golangci-lint/releases/tag/v1.39.0) (requires `./docker-helper.sh --rebuild`).
 
 ## 2021-03-25
+
 ### Changed
+
 - Bump github.com/rs/zerolog from [1.20.0 to 1.21.0](https://github.com/allaboutapps/go-starter/pull/69)
 - Bump google.golang.org/api from [0.42.0 to 0.43.0](https://github.com/allaboutapps/go-starter/pull/68)
 
 ## 2021-03-24
 
 ### Changed
+
 - We no longer do explicit calls to `t.Parallel()` in our go-starter tests (except autogenerated code). For the reasons why see [FAQ: Should I use `t.Parallel()` in my tests?](https://github.com/allaboutapps/go-starter/wiki/FAQ#should-i-use-tparallel-in-my-tests).
 - Switched to [github.com/uw-labs/lichen](https://github.com/uw-labs/lichen) for getting license information of embedded dependencies in our final `./bin/app` binary.
-- The following make targets are no longer flagged as `(opt)` and thus move into the main `make help` target (use `make help-all` to see all targets): 
-  - `make lint`: Runs golangci-lint and make check-*.
+- The following make targets are no longer flagged as `(opt)` and thus move into the main `make help` target (use `make help-all` to see all targets):
+  - `make lint`: Runs golangci-lint and make check-\*.
   - `make go-test-print-slowest`: Print slowest running tests (must be done after running tests).
   - `make get-licenses`: Prints licenses of embedded modules in the compiled bin/app.
   - `make get-embedded-modules`: Prints embedded modules in the compiled bin/app.
@@ -226,15 +368,20 @@
   - `make get-module-name`: Prints current go module-name (pipeable).
 - `make check-gen-dirs` now ignores `.DS_Store` within `/internal/models/**/*` and `/internal/types/**/*` and echo an errors detailing what happened.
 - Upgrade to [`github.com/go-openapi/runtime@v0.19.27`](https://github.com/go-openapi/runtime/compare/v0.19.26...v0.19.27)
+
 ## 2021-03-16
+
 ### Changed
+
 - `make all` no longer executes `make info` as part of its targets chain.
   - It's very common to use `make all` multiple times per day during development and thats fine! However, the output of `make info` is typically ignored by our engineers (if they explicitly want this information, they use `make info`). So `make all` was just too spammy in it's previous form.
   - `make info` does network calls and typically takes around 5sec to execute. This slowdown is not acceptable when running `make all`, especially if the information it provides isn't used anyways.
-  - Thus: Just trigger `make info` manually if you need the information of the `[spec DB]` structure, current `[handlers]` and `[go.mod]` information. Furthermore you may also visit `tmp/.info-db`, `tmp/.info-handlers` and `tmp/.info-go` after triggering `make info` as we store this information there after a run. 
+  - Thus: Just trigger `make info` manually if you need the information of the `[spec DB]` structure, current `[handlers]` and `[go.mod]` information. Furthermore you may also visit `tmp/.info-db`, `tmp/.info-handlers` and `tmp/.info-go` after triggering `make info` as we store this information there after a run.
 
 ## 2021-03-15
+
 ### Changed
+
 - Upgrades `go.mod`:
   - [`github.com/volatiletech/sqlboiler/v4@v4.5.0`](https://github.com/volatiletech/sqlboiler/blob/master/CHANGELOG.md#v450---2021-03-14)
   - [`github.com/rogpeppe/go-internal@v1.8.0`](https://github.com/rogpeppe/go-internal/releases/tag/v1.8.0)
@@ -245,9 +392,10 @@
 - `make help` no longer reports `(opt)` flagged targets, use `make help-all` instead.
 - `make tools` now executes `go install {}` in parallel
 - `make info` now fetches information in parallel
-- Seeding: Switch to `db|dbUtil.WithTransaction` instead of manually managing the db transaction. *Note*: We will enforce using `WithTransaction` instead of manually managing the life-cycle of db transactions through a custom linter in an upcoming change. It's way safer and manually managing db transactions only makes sense in very very special cases (where you will be able to opt-out via linter excludes). Also see [What's `WithTransaction`, shouldn't I use `db.BeginTx`, `db.Commit`, and `db.Rollback`?](https://github.com/allaboutapps/go-starter/wiki/FAQ#whats-withtransaction-shouldnt-i-use-dbbegintx-dbcommit-and-dbrollback).
+- Seeding: Switch to `db|dbUtil.WithTransaction` instead of manually managing the db transaction. _Note_: We will enforce using `WithTransaction` instead of manually managing the life-cycle of db transactions through a custom linter in an upcoming change. It's way safer and manually managing db transactions only makes sense in very very special cases (where you will be able to opt-out via linter excludes). Also see [What's `WithTransaction`, shouldn't I use `db.BeginTx`, `db.Commit`, and `db.Rollback`?](https://github.com/allaboutapps/go-starter/wiki/FAQ#whats-withtransaction-shouldnt-i-use-dbbegintx-dbcommit-and-dbrollback).
 
 ### Fixed
+
 - The correct implementation of `(util|scripts).GetProjectRootDir() string` now gets automatically selected based on the `scripts` build tag.
   - We currently have 2 different `GetProjectRootDir()` implementations and each one is useful on its own:
     - `util.GetProjectRootDir()` gets used while `app` or `go test` runs and resolves in the following way: use `PROJECT_ROOT_DIR` (if set), else default to the resolved path to the executable unless we can't resolve that, then **panic**!
@@ -255,29 +403,41 @@
   - `/internal/util/(get_project_root_dir.go|get_project_root_dir_scripts.go)` is now introduced to automatically switch to the proper implementation based on the `// +build !scripts` or `// +build scripts` build tag, thus it's now consistent to import `util.GetProjectRootDir()`, especially while handler generation time (`make go-generate`).
 
 ## 2021-03-12
+
 ### Changed
+
 - Upgrades to `golang@v1.16.2` (use `./docker-helper.sh --rebuild`).
 - Silence resolve of `GO_MODULE_NAME` if `go` was not found in path (typically host env related).
 
 ## 2021-03-11
+
 ### Added
+
 - `make build` (`make go-build`) now sets `internal/config.ModuleName`, `internal/config.Commit` and `internal/config.BuildDate` via `-ldflags`.
   - `/-/version` (mgmt key auth) endpoint is now available, prints the same as `app -v`.
   - `app -v` is now available and prints out buildDate and commit. Sample:
+
 ```bash
 app -v
 github.com/majodev/go-beer-punk-proxy @ 19c4cdd0da151df432cd5ab33c35c8987b594cac (2021-03-11T15:42:27+00:00)
 ```
+
 ### Changed
+
 - Upgrades to `golang@v1.16.1` (use `./docker-helper.sh --rebuild`).
 - Updates `google.golang.org/api@v0.41.0`, `github.com/gabriel-vasile/mimetype@v1.2.0` ([new supported formats](https://github.com/gabriel-vasile/mimetype/tree/v1.2.0)), `golang.org/x/sys`
 - Removed `**/.git` from `.dockerignore` (`builder` stage) as we want the local git repo available while running `make go-build`.
-- `app --help` now prominently includes the module name of the project. 
+- `app --help` now prominently includes the module name of the project.
 - Prominently recommend `make force-module-name` after running `make git-merge-go-starter` to fix all import paths.
+
 ## 2021-03-09
+
 ### Added
+
 - Introduces `CHANGELOG.md`
+
 ### Changed
+
 - `make git-merge-go-starter` now uses `--allow-unrelated-histories` by default.
   - `README.md` and FAQ now mention that it's recommended to execute `make git-merge-go-starter` during project setup (especially for single commit generated from template project project setups).
   - See [FAQ: I want to compare or update my project/fork to the latest go-starter master.](https://github.com/allaboutapps/go-starter/wiki/FAQ#i-want-to-compare-or-update-my-projectfork-to-the-latest-go-starter-master)
@@ -285,33 +445,48 @@ github.com/majodev/go-beer-punk-proxy @ 19c4cdd0da151df432cd5ab33c35c8987b594cac
 - Upgrade to [`golangci-lint@v1.38.0`](https://github.com/golangci/golangci-lint/releases/tag/v1.38.0)
 
 ## 2021-03-08
+
 ### Added
+
 - `allaboutapps/nullable` is now included by default. See [#58](https://github.com/allaboutapps/go-starter/pull/58), [FAQ: I need an optional Swagger payload property that is nullable!](https://github.com/allaboutapps/go-starter/wiki/FAQ#i-need-an-optional-swagger-payload-property-that-is-nullable)
+
 ### Changed
+
 - Upgrade to [`labstack/echo@v4.2.1`](https://github.com/labstack/echo/releases/tag/v4.2.1), [`lib/pq@v1.10.0`](https://github.com/lib/pq/releases/tag/v1.10.0)
 
 ## 2021-02-23
+
 ### Deprecated
+
 - `util.BindAndValidate` is now marked as deprecated as [`labstack/echo@v4.2.0`](https://github.com/labstack/echo/releases/tag/v4.2.0) exposes a more granular binding through its `DefaultBinder`.
+
 ### Added
+
 - The more specialized variants `util.BindAndValidatePathAndQueryParams` and `util.BindAndValidateBody` are now available. See [`/internal/util/http.go`](https://github.com/allaboutapps/go-starter/blob/master/internal/util/http.go#L87).
 
 ### Changed
+
 - `golang@v1.16.0`
 - [`labstack/echo@v4.2.0`](https://github.com/labstack/echo/releases/tag/v4.2.0)
 
 ## 2021-02-16
+
 ### Changed
+
 - Upgrades to [`pgFormatter@v5.0.0`](https://github.com/darold/pgFormatter/releases) + forces VSCode to use that version within the devcontainer through it's extension.
 
 ## 2021-02-09
+
 ### Changed
+
 - `golang@v1.15.8`, `go-swagger@v0.26.1`
 
 ## 2021-02-01
+
 ### Changed
+
 ```
-- Dockerfile updates: 
+- Dockerfile updates:
   - golang@1.15.7
   - apt add icu-devtools (VSCode live sharing)
   - gotestsum@1.6.1
@@ -333,41 +508,55 @@ github.com/majodev/go-beer-punk-proxy @ 19c4cdd0da151df432cd5ab33c35c8987b594cac
 ```
 
 ### Fixed
+
 - disabled goswagger generate server flag `--keep-spec-order` as relative resolution of its temporal created yml file is broken - see https://github.com/go-swagger/go-swagger/issues/2216
 
 ## 2020-11-04
+
 ### Added
+
 - `make watch-swagger` and `make watch-sql`
+
 ### Changed
+
 - sqlboiler@4.3.0
 
 ## 2020-11-02
+
 ### Added
+
 - `make watch-tests`: Watches .go files and runs package tests on modifications.
 
-
 ## 2020-09-30
+
 ### Added
+
 - `pprof` handlers, see [FAQ: I need to (remotely) pprof my running service!](https://github.com/allaboutapps/go-starter/wiki/FAQ#i-need-to-remotely-pprof-my-running-service)
 
-
 ## 2020-09-24
+
 ### Added
+
 - `make git-merge-go-starter`, see [FAQ: I want to compare or update my project/fork to the latest go-starter master.](https://github.com/allaboutapps/go-starter/wiki/FAQ#i-want-to-compare-or-update-my-projectfork-to-the-latest-go-starter-master)
 
 ## 2020-09-22
+
 ### Added
+
 - `app probe readiness` and `app probe liveness` sub-commands.
 - `/-/ready` and `/-/healthy` handlers.
 
-
 ## 2020-09-16
+
 ### Changed
+
 - Force VSCode to use our installed version of golang-cilint
 - All `*.go` files in `/scripts` now use the build tag `scripts` so we can ensure they are not compiled into the final `app` binary.
 
 ### Added
+
 - `go.not` file to ensure certain generation- / test-only dependencies don't end up in the final `app` binary. Automatically checked though `make` (sub-target `make check-embedded-modules-go-not`).
 
 ## 2020-09-11
+
 - Switch to `distroless` as final app stage, see [FAQ: Should I use distroless/base or debian:buster-slim in the Dockerfile app stage?](https://github.com/allaboutapps/go-starter/wiki/FAQ#should-i-use-distrolessbase-or-debianbuster-slim-in-the-dockerfile-app-stage)

@@ -206,6 +206,8 @@ func (m *Beer) validateBoilVolume(formats strfmt.Registry) error {
 		if err := m.BoilVolume.Validate(formats); err != nil {
 			if ve, ok := err.(*errors.Validation); ok {
 				return ve.ValidateName("boil_volume")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("boil_volume")
 			}
 			return err
 		}
@@ -290,6 +292,8 @@ func (m *Beer) validateIngredients(formats strfmt.Registry) error {
 		if err := m.Ingredients.Validate(formats); err != nil {
 			if ve, ok := err.(*errors.Validation); ok {
 				return ve.ValidateName("ingredients")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("ingredients")
 			}
 			return err
 		}
@@ -308,6 +312,8 @@ func (m *Beer) validateMethod(formats strfmt.Registry) error {
 		if err := m.Method.Validate(formats); err != nil {
 			if ve, ok := err.(*errors.Validation); ok {
 				return ve.ValidateName("method")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("method")
 			}
 			return err
 		}
@@ -362,6 +368,8 @@ func (m *Beer) validateVolume(formats strfmt.Registry) error {
 		if err := m.Volume.Validate(formats); err != nil {
 			if ve, ok := err.(*errors.Validation); ok {
 				return ve.ValidateName("volume")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("volume")
 			}
 			return err
 		}
@@ -402,6 +410,8 @@ func (m *Beer) contextValidateBoilVolume(ctx context.Context, formats strfmt.Reg
 		if err := m.BoilVolume.ContextValidate(ctx, formats); err != nil {
 			if ve, ok := err.(*errors.Validation); ok {
 				return ve.ValidateName("boil_volume")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("boil_volume")
 			}
 			return err
 		}
@@ -416,6 +426,8 @@ func (m *Beer) contextValidateIngredients(ctx context.Context, formats strfmt.Re
 		if err := m.Ingredients.ContextValidate(ctx, formats); err != nil {
 			if ve, ok := err.(*errors.Validation); ok {
 				return ve.ValidateName("ingredients")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("ingredients")
 			}
 			return err
 		}
@@ -430,6 +442,8 @@ func (m *Beer) contextValidateMethod(ctx context.Context, formats strfmt.Registr
 		if err := m.Method.ContextValidate(ctx, formats); err != nil {
 			if ve, ok := err.(*errors.Validation); ok {
 				return ve.ValidateName("method")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("method")
 			}
 			return err
 		}
@@ -444,6 +458,8 @@ func (m *Beer) contextValidateVolume(ctx context.Context, formats strfmt.Registr
 		if err := m.Volume.ContextValidate(ctx, formats); err != nil {
 			if ve, ok := err.(*errors.Validation); ok {
 				return ve.ValidateName("volume")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("volume")
 			}
 			return err
 		}

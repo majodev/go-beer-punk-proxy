@@ -55,6 +55,8 @@ func (m *BoilVolume) validateUnit(formats strfmt.Registry) error {
 		if err := m.Unit.Validate(formats); err != nil {
 			if ve, ok := err.(*errors.Validation); ok {
 				return ve.ValidateName("unit")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("unit")
 			}
 			return err
 		}
@@ -83,6 +85,8 @@ func (m *BoilVolume) contextValidateUnit(ctx context.Context, formats strfmt.Reg
 		if err := m.Unit.ContextValidate(ctx, formats); err != nil {
 			if ve, ok := err.(*errors.Validation); ok {
 				return ve.ValidateName("unit")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("unit")
 			}
 			return err
 		}

@@ -56,6 +56,8 @@ func (m *Malt) validateAmount(formats strfmt.Registry) error {
 		if err := m.Amount.Validate(formats); err != nil {
 			if ve, ok := err.(*errors.Validation); ok {
 				return ve.ValidateName("amount")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("amount")
 			}
 			return err
 		}
@@ -93,6 +95,8 @@ func (m *Malt) contextValidateAmount(ctx context.Context, formats strfmt.Registr
 		if err := m.Amount.ContextValidate(ctx, formats); err != nil {
 			if ve, ok := err.(*errors.Validation); ok {
 				return ve.ValidateName("amount")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("amount")
 			}
 			return err
 		}

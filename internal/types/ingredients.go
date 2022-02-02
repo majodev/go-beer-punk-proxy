@@ -65,6 +65,8 @@ func (m *Ingredients) validateHops(formats strfmt.Registry) error {
 			if err := m.Hops[i].Validate(formats); err != nil {
 				if ve, ok := err.(*errors.Validation); ok {
 					return ve.ValidateName("hops" + "." + strconv.Itoa(i))
+				} else if ce, ok := err.(*errors.CompositeError); ok {
+					return ce.ValidateName("hops" + "." + strconv.Itoa(i))
 				}
 				return err
 			}
@@ -90,6 +92,8 @@ func (m *Ingredients) validateMalt(formats strfmt.Registry) error {
 			if err := m.Malt[i].Validate(formats); err != nil {
 				if ve, ok := err.(*errors.Validation); ok {
 					return ve.ValidateName("malt" + "." + strconv.Itoa(i))
+				} else if ce, ok := err.(*errors.CompositeError); ok {
+					return ce.ValidateName("malt" + "." + strconv.Itoa(i))
 				}
 				return err
 			}
@@ -126,6 +130,8 @@ func (m *Ingredients) contextValidateHops(ctx context.Context, formats strfmt.Re
 			if err := m.Hops[i].ContextValidate(ctx, formats); err != nil {
 				if ve, ok := err.(*errors.Validation); ok {
 					return ve.ValidateName("hops" + "." + strconv.Itoa(i))
+				} else if ce, ok := err.(*errors.CompositeError); ok {
+					return ce.ValidateName("hops" + "." + strconv.Itoa(i))
 				}
 				return err
 			}
@@ -144,6 +150,8 @@ func (m *Ingredients) contextValidateMalt(ctx context.Context, formats strfmt.Re
 			if err := m.Malt[i].ContextValidate(ctx, formats); err != nil {
 				if ve, ok := err.(*errors.Validation); ok {
 					return ve.ValidateName("malt" + "." + strconv.Itoa(i))
+				} else if ce, ok := err.(*errors.CompositeError); ok {
+					return ce.ValidateName("malt" + "." + strconv.Itoa(i))
 				}
 				return err
 			}

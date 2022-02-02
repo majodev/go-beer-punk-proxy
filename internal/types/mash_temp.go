@@ -51,6 +51,8 @@ func (m *MashTemp) validateTemp(formats strfmt.Registry) error {
 		if err := m.Temp.Validate(formats); err != nil {
 			if ve, ok := err.(*errors.Validation); ok {
 				return ve.ValidateName("temp")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("temp")
 			}
 			return err
 		}
@@ -79,6 +81,8 @@ func (m *MashTemp) contextValidateTemp(ctx context.Context, formats strfmt.Regis
 		if err := m.Temp.ContextValidate(ctx, formats); err != nil {
 			if ve, ok := err.(*errors.Validation); ok {
 				return ve.ValidateName("temp")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("temp")
 			}
 			return err
 		}
